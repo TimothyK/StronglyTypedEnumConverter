@@ -75,6 +75,30 @@ namespace StronglyTypedEnumConverter
         }
 
 
+        [TestMethod]
+        public void Converter_BasicEnum_ReturnsCodeWithOneClass()
+        {
+            var converter = new Converter();
+            var sourceCode = converter.Convert(CowboyTypeEnumDef);
+
+            var assembly = CompileCode(sourceCode);
+            
+            Assert.AreEqual(1, assembly.GetTypes().Length);
+        }
+        
+        [TestMethod]
+        public void Converter_BasicEnum_ReturnsClassWithSameNameAsEnum()
+        {
+            var converter = new Converter();
+            var sourceCode = converter.Convert(CowboyTypeEnumDef);
+            Console.WriteLine(sourceCode);
+
+            var assembly = CompileCode(sourceCode);
+
+            var type = assembly.GetTypes()[0];
+            
+            Assert.AreEqual("CowboyType", type.Name);
+        }
 
     }
     

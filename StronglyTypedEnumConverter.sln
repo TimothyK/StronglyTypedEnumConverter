@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StronglyTypedEnumConverterLib", "StronglyTypedEnumConverterLib\StronglyTypedEnumConverterLib.csproj", "{9B4D7414-D0A8-40F9-B18A-44EB78B85FFB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StronglyTypedEnumConverter_Tests", "StronglyTypedEnumConverter_Tests\StronglyTypedEnumConverter_Tests.csproj", "{F7AE44D9-8326-4154-A689-1C6AA71F6EFF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B4D7414-D0A8-40F9-B18A-44EB78B85FFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B4D7414-D0A8-40F9-B18A-44EB78B85FFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B4D7414-D0A8-40F9-B18A-44EB78B85FFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B4D7414-D0A8-40F9-B18A-44EB78B85FFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7AE44D9-8326-4154-A689-1C6AA71F6EFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7AE44D9-8326-4154-A689-1C6AA71F6EFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7AE44D9-8326-4154-A689-1C6AA71F6EFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7AE44D9-8326-4154-A689-1C6AA71F6EFF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

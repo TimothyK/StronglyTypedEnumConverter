@@ -54,6 +54,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ConverterTests.cs" />
+    <Compile Include="CowboyType.cs" />
+    <Compile Include="CowboyTypeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

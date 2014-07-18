@@ -16,6 +16,9 @@ namespace StronglyTypedEnumConverter
 
             var enumType = enumAssembly.GetTypes()[0];
 
+
+            return "class " + enumType.Name + " {}";
+
             var compileUnit = GenerateClassCompileUnit(enumType);
 
             var result = GenerateCodeFromCompileUnit(compileUnit);

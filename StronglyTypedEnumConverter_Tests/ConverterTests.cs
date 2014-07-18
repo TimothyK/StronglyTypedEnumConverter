@@ -99,6 +99,26 @@ namespace StronglyTypedEnumConverter
             
             Assert.AreEqual("CowboyType", type.Name);
         }
+        
+        [TestMethod]
+        public void Converter_BasicEnum_ReturnsHasThreeStaticFields()
+        {
+            var converter = new Converter();
+            var sourceCode = converter.Convert(CowboyTypeEnumDef);
+            Console.WriteLine(sourceCode);
+
+            var assembly = CompileCode(sourceCode);
+
+            var type = assembly.GetTypes()[0];
+
+            var fieldNames = type.GetFields(BindingFlags.Static | BindingFlags.Public)
+                .Select(f => f.Name)
+                .ToArray();
+
+            Assert.IsTrue(fieldNames.Contains("Good"));     
+            Assert.IsTrue(fieldNames.Contains("Bad"));     
+            Assert.IsTrue(fieldNames.Contains("Ugly"));     
+        }
 
     }
     

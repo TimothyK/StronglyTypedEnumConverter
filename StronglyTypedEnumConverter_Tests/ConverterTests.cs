@@ -2,7 +2,7 @@
 using System.CodeDom.Compiler;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace StronglyTypedEnumConverter
@@ -16,7 +16,6 @@ namespace StronglyTypedEnumConverter
             var converter = new Converter();
             Assert.IsNotNull(converter);
         }
-
 
         private const string CowboyTypeEnumDef = "enum CowboyType {Good,Bad,Ugly};";        
 
@@ -46,6 +45,8 @@ namespace StronglyTypedEnumConverter
                 GenerateInMemory = true,
                 GenerateExecutable = false
             };
+            parameters.ReferencedAssemblies.Add("System.dll");
+            parameters.ReferencedAssemblies.Add("System.Core.dll");
 
             var compilerOut = compiler.CompileAssemblyFromSource(parameters, sourceCode);
 
@@ -78,16 +79,12 @@ namespace StronglyTypedEnumConverter
         [TestMethod]
         public void Converter_BasicEnum_ReturnsCodeWithOneClass()
         {
-            var converter = new Converter();
-            var sourceCode = converter.Convert(CowboyTypeEnumDef);
+            var type = ConvertBasicCowboyTypeEnum();
 
-            var assembly = CompileCode(sourceCode);
-            
-            Assert.AreEqual(1, assembly.GetTypes().Length);
+            Assert.IsNotNull(type);
         }
-        
-        [TestMethod]
-        public void Converter_BasicEnum_ReturnsClassWithSameNameAsEnum()
+
+        private static Type ConvertBasicCowboyTypeEnum()
         {
             var converter = new Converter();
             var sourceCode = converter.Convert(CowboyTypeEnumDef);
@@ -95,21 +92,32 @@ namespace StronglyTypedEnumConverter
 
             var assembly = CompileCode(sourceCode);
 
-            var type = assembly.GetTypes()[0];
+            var type = assembly.GetTypes().SingleOrDefault(t => !IsAnonymousType(t));
+            return type;
+        }
+
+        //Credit: http://www.liensberger.it/web/blog/?p=191
+        private static bool IsAnonymousType(Type type)
+        {
+            if (type == null)
+                throw new ArgumentNullException("type");
             
+            return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false)
+                && (type.Name.StartsWith("<") || type.Name.StartsWith("VB$"))
+                && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic;
+        }
+
+        [TestMethod]
+        public void Converter_BasicEnum_ReturnsClassWithSameNameAsEnum()
+        {
+            var type = ConvertBasicCowboyTypeEnum();           
             Assert.AreEqual("CowboyType", type.Name);
         }
         
         [TestMethod]
         public void Converter_BasicEnum_ReturnsHasThreeStaticFields()
         {
-            var converter = new Converter();
-            var sourceCode = converter.Convert(CowboyTypeEnumDef);
-            Console.WriteLine(sourceCode);
-
-            var assembly = CompileCode(sourceCode);
-
-            var type = assembly.GetTypes()[0];
+            var type = ConvertBasicCowboyTypeEnum();
 
             var fieldNames = type.GetFields(BindingFlags.Static | BindingFlags.Public)
                 .Select(f => f.Name)
@@ -118,6 +126,17 @@ namespace StronglyTypedEnumConverter
             Assert.IsTrue(fieldNames.Contains("Good"));     
             Assert.IsTrue(fieldNames.Contains("Bad"));     
             Assert.IsTrue(fieldNames.Contains("Ugly"));     
+        }
+        
+        [TestMethod]
+        public void Converter_BasicEnum_HasAnAllMethod()
+        {
+            var type = ConvertBasicCowboyTypeEnum();
+
+            var hasAllMethod = type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .Any(f => f.Name == "All");
+
+            Assert.IsTrue(hasAllMethod);     
         }
 
     }

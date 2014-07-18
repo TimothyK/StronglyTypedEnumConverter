@@ -19,7 +19,9 @@ namespace StronglyTypedEnumConverter
                 .ToArray();
 
             var result = new StringBuilder();
-            
+
+            result.AppendLine("using System.Collections.Generic;");
+
             //Class definition
             result.AppendLine("class " + enumType.Name);
             result.AppendLine("{");
@@ -36,7 +38,13 @@ namespace StronglyTypedEnumConverter
             }
             result.AppendLine();
 
-
+            //All method
+            result.AppendLine("    public static IEnumerable<" + enumType.Name + "> All()");
+            result.AppendLine("    {");
+            foreach (var memberName in memberNames)
+                result.AppendLine("        yield return " + memberName + ";");
+            result.AppendLine("    }");
+            result.AppendLine();
 
             //End of class definition
             result.AppendLine("}");

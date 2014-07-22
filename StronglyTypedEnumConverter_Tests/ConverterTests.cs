@@ -1,5 +1,7 @@
 ﻿using System;
 using System.CodeDom.Compiler;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -113,13 +115,28 @@ namespace StronglyTypedEnumConverter
             var type = ConvertBasicCowboyTypeEnum();           
             Assert.AreEqual("CowboyType", type.Name);
         }
+
+        [TestMethod]
+        public void Converter_BasicEnum_HasPrivateConstructor()
+        {
+            var type = ConvertBasicCowboyTypeEnum();
+            Assert.IsTrue(type.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).Any());            
+        }
         
         [TestMethod]
-        public void Converter_BasicEnum_ReturnsHasThreeStaticFields()
+        public void Converter_BasicEnum_HasNoPublicConstructor()
+        {
+            var type = ConvertBasicCowboyTypeEnum();            
+            Assert.IsFalse(type.GetConstructors(BindingFlags.Public | BindingFlags.Instance).Any());
+        }
+        
+        [TestMethod]
+        public void Converter_BasicEnum_ReturnsHasThreeStaticReadOnlyFields()
         {
             var type = ConvertBasicCowboyTypeEnum();
 
             var fieldNames = type.GetFields(BindingFlags.Static | BindingFlags.Public)
+                .Where(f => f.IsInitOnly)
                 .Select(f => f.Name)
                 .ToArray();
 
@@ -128,6 +145,25 @@ namespace StronglyTypedEnumConverter
             Assert.IsTrue(fieldNames.Contains("Ugly"));     
         }
         
+        [TestMethod]
+        public void Converter_BasicEnum_StaticFieldsHaveUniqueValues()
+        {
+            var type = ConvertBasicCowboyTypeEnum();
+            var values = GetEnumValues(type);
+
+            Assert.AreEqual(values.Length, 3);
+            Assert.AreEqual(values.Distinct().Count(), 3);
+        }
+
+        private static object[] GetEnumValues(Type type)
+        {
+            return type.GetFields(BindingFlags.Static | BindingFlags.Public)
+                .Where(f => f.IsInitOnly)
+                .Select(f => f.GetValue(null))
+                .Where(x => x != null)
+                .ToArray();
+        }
+
         [TestMethod]
         public void Converter_BasicEnum_HasAnAllMethod()
         {
@@ -138,6 +174,24 @@ namespace StronglyTypedEnumConverter
 
             Assert.IsTrue(hasAllMethod);     
         }
+        
+        [TestMethod]
+        public void Converter_BasicEnum_AllMethodReturnsAllValues()
+        {
+            var type = ConvertBasicCowboyTypeEnum();
+            var expected = GetEnumValues(type);
+
+            var allMethod = type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .Single(f => f.Name == "All");
+
+            var actual = ((IEnumerable<object>) allMethod.Invoke(null, null)).ToArray();
+
+            Assert.AreEqual(expected.Length, actual.Length);
+            foreach (var item in expected)
+                Assert.IsTrue(actual.Contains(item));
+        }
+
+
 
     }
     

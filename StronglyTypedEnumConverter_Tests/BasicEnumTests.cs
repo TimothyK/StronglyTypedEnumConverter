@@ -1,6 +1,5 @@
 ﻿using System;
 using System.CodeDom.Compiler;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,33 +9,28 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace StronglyTypedEnumConverter
 {
     [TestClass]
-    public class ConverterTests
+    public class BasicEnumTests
     {
-        [TestMethod]
-        public void Converter_Initialize_ObjectCreated()
+        private static Type _type;
+
+        [ClassInitialize]
+        public static void ClassInit(TestContext context)
         {
-            var converter = new Converter();
-            Assert.IsNotNull(converter);
+            _type = ConvertBasicCowboyTypeEnum();
         }
 
-        private const string CowboyTypeEnumDef = "enum CowboyType {Good,Bad,Ugly};";        
+        private const string CowboyTypeEnumDef = "enum CowboyType {Good,Bad,Ugly};";
 
-        [TestMethod]
-        public void Converter_BasicEnum_ReturnsNonEmptyValue()
-        {
-            var converter = new Converter();
-            var output = converter.Convert(CowboyTypeEnumDef);
-            Assert.IsNotNull(output);
-        }
-        
-        [TestMethod]
-        public void Converter_BasicEnum_ReturnsCodeThatCompiles()
+        private static Type ConvertBasicCowboyTypeEnum()
         {
             var converter = new Converter();
             var sourceCode = converter.Convert(CowboyTypeEnumDef);
-            
+            Console.WriteLine(sourceCode);
+
             var assembly = CompileCode(sourceCode);
-            Assert.IsNotNull(assembly);
+
+            var type = assembly.GetTypes().SingleOrDefault(t => !IsAnonymousType(t));
+            return type;
         }
 
         private static Assembly CompileCode(string sourceCode)
@@ -59,83 +53,46 @@ namespace StronglyTypedEnumConverter
                 Console.Error.WriteLine(error.ToString());
             throw new ApplicationException("Could Not Compile Code");
         }
-
-        [TestMethod]
-        public void Converter_GarbageIn_ThrowsArgumentException()
-        {
-            var converter = new Converter();
-            try
-            {
-                converter.Convert("garbage }{");
-            }
-            catch (ArgumentException ex)
-            {
-                Console.WriteLine(ex);
-                return;
-            }
-
-            Assert.Fail("Expected exception did not occur");            
-        }
-
-
-        [TestMethod]
-        public void Converter_BasicEnum_ReturnsCodeWithOneClass()
-        {
-            var type = ConvertBasicCowboyTypeEnum();
-
-            Assert.IsNotNull(type);
-        }
-
-        private static Type ConvertBasicCowboyTypeEnum()
-        {
-            var converter = new Converter();
-            var sourceCode = converter.Convert(CowboyTypeEnumDef);
-            Console.WriteLine(sourceCode);
-
-            var assembly = CompileCode(sourceCode);
-
-            var type = assembly.GetTypes().SingleOrDefault(t => !IsAnonymousType(t));
-            return type;
-        }
-
-        //Credit: http://www.liensberger.it/web/blog/?p=191
+       
+        /// <summary>
+        /// Returns true if the Type is anonymous
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns>
+        /// Credit: http://www.liensberger.it/web/blog/?p=191
+        /// </returns>
         private static bool IsAnonymousType(Type type)
         {
             if (type == null)
                 throw new ArgumentNullException("type");
             
             return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false)
-                && (type.Name.StartsWith("<") || type.Name.StartsWith("VB$"))
-                && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic;
+                   && (type.Name.StartsWith("<") || type.Name.StartsWith("VB$"))
+                   && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic;
         }
 
         [TestMethod]
-        public void Converter_BasicEnum_ReturnsClassWithSameNameAsEnum()
+        public void Class_SameNameAsEnum()
         {
-            var type = ConvertBasicCowboyTypeEnum();           
-            Assert.AreEqual("CowboyType", type.Name);
+            Assert.AreEqual("CowboyType", _type.Name);
         }
 
         [TestMethod]
-        public void Converter_BasicEnum_HasPrivateConstructor()
+        public void Class_HasPrivateConstructor()
         {
-            var type = ConvertBasicCowboyTypeEnum();
-            Assert.IsTrue(type.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).Any());            
+            Assert.IsTrue(_type.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).Any());            
         }
         
         [TestMethod]
-        public void Converter_BasicEnum_HasNoPublicConstructor()
+        public void Class_HasNoPublicConstructor()
         {
-            var type = ConvertBasicCowboyTypeEnum();            
-            Assert.IsFalse(type.GetConstructors(BindingFlags.Public | BindingFlags.Instance).Any());
+            Assert.IsFalse(_type.GetConstructors(BindingFlags.Public | BindingFlags.Instance).Any());
         }
         
         [TestMethod]
-        public void Converter_BasicEnum_ReturnsHasThreeStaticReadOnlyFields()
+        public void Members_HasThreeStaticReadOnlyFields()
         {
-            var type = ConvertBasicCowboyTypeEnum();
-
-            var fieldNames = type.GetFields(BindingFlags.Static | BindingFlags.Public)
+            var fieldNames = _type.GetFields(BindingFlags.Static | BindingFlags.Public)
                 .Where(f => f.IsInitOnly)
                 .Select(f => f.Name)
                 .ToArray();
@@ -146,18 +103,17 @@ namespace StronglyTypedEnumConverter
         }
         
         [TestMethod]
-        public void Converter_BasicEnum_StaticFieldsHaveUniqueValues()
+        public void Members_HaveUniqueValues()
         {
-            var type = ConvertBasicCowboyTypeEnum();
-            var values = GetEnumValues(type);
+            var values = GetEnumValues();
 
             Assert.AreEqual(values.Length, 3);
             Assert.AreEqual(values.Distinct().Count(), 3);
         }
 
-        private static object[] GetEnumValues(Type type)
+        private static object[] GetEnumValues()
         {
-            return type.GetFields(BindingFlags.Static | BindingFlags.Public)
+            return _type.GetFields(BindingFlags.Static | BindingFlags.Public)
                 .Where(f => f.IsInitOnly)
                 .Select(f => f.GetValue(null))
                 .Where(x => x != null)
@@ -165,23 +121,20 @@ namespace StronglyTypedEnumConverter
         }
 
         [TestMethod]
-        public void Converter_BasicEnum_HasAnAllMethod()
+        public void All_MethodExists()
         {
-            var type = ConvertBasicCowboyTypeEnum();
-
-            var hasAllMethod = type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+            var hasAllMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Any(f => f.Name == "All");
 
             Assert.IsTrue(hasAllMethod);     
         }
         
         [TestMethod]
-        public void Converter_BasicEnum_AllMethodReturnsAllValues()
+        public void All_ReturnsAllValues()
         {
-            var type = ConvertBasicCowboyTypeEnum();
-            var expected = GetEnumValues(type);
+            var expected = GetEnumValues();
 
-            var allMethod = type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+            var allMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Single(f => f.Name == "All");
 
             var actual = ((IEnumerable<object>) allMethod.Invoke(null, null)).ToArray();
@@ -192,11 +145,9 @@ namespace StronglyTypedEnumConverter
         }
 
         [TestMethod]
-        public void Converter_BasicEnum_ToStringReturnsExpected()
+        public void ToString_ReturnsExpected()
         {
-            var type = ConvertBasicCowboyTypeEnum();
-
-            var fields = type.GetFields(BindingFlags.Static | BindingFlags.Public)
+            var fields = _type.GetFields(BindingFlags.Static | BindingFlags.Public)
                 .Where(f => f.IsInitOnly)
                 .ToArray();
 
@@ -206,27 +157,23 @@ namespace StronglyTypedEnumConverter
         }
 
         [TestMethod]
-        public void Converter_BasicEnum_HasFromStringMethod()
+        public void FromString_MethodExists()
         {
-            var type = ConvertBasicCowboyTypeEnum();
-
-            var hasFromStringMethod = type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+            var hasFromStringMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Any(f => f.Name == "FromString");
 
             Assert.IsTrue(hasFromStringMethod);
         }
         
         [TestMethod]
-        public void Converter_BasicEnum_FromStringReturnsValue()
+        public void FromString_ValidInputs_ReturnsValidValues()
         {
-            var type = ConvertBasicCowboyTypeEnum();
-
             var strings = new[] {"Good", "Bad", "Ugly"};
 
-            var fromStringMethod = type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+            var fromStringMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .First(f => f.Name == "FromString");
 
-            var fields = type.GetFields(BindingFlags.Static | BindingFlags.Public)
+            var fields = _type.GetFields(BindingFlags.Static | BindingFlags.Public)
                 .Where(f => f.IsInitOnly);
 
             var map = strings.ToDictionary(
@@ -238,11 +185,9 @@ namespace StronglyTypedEnumConverter
         }
         
         [TestMethod]
-        public void Converter_BasicEnum_FromStringWithNullThrowsArgNullException()
+        public void FromString_NullInput_ThrowsArgNullException()
         {
-            var type = ConvertBasicCowboyTypeEnum();
-
-            var fromStringMethod = type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+            var fromStringMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .First(f => f.Name == "FromString");
 
             try
@@ -260,11 +205,9 @@ namespace StronglyTypedEnumConverter
         }
         
         [TestMethod]
-        public void Converter_BasicEnum_FromStringWithInvalidValueThrowsArgRangeException()
+        public void FromString_GarbageInput_ThrowsArgRangeException()
         {
-            var type = ConvertBasicCowboyTypeEnum();
-
-            var fromStringMethod = type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+            var fromStringMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .First(f => f.Name == "FromString");
 
             try

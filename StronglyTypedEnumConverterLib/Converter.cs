@@ -20,7 +20,10 @@ namespace StronglyTypedEnumConverter
 
             var result = new StringBuilder();
 
+            result.AppendLine("using System;");
             result.AppendLine("using System.Collections.Generic;");
+            result.AppendLine("using System.Linq;");
+            result.AppendLine();
 
             //Class definition
             result.AppendLine("class " + enumType.Name);
@@ -59,6 +62,18 @@ namespace StronglyTypedEnumConverter
             result.AppendLine(Indent(2) + "};");
             result.AppendLine();
             result.AppendLine(Indent(2) + "return map[this];");
+            result.AppendLine(Indent(1) + "}");
+            result.AppendLine();
+
+            //FromString method
+            result.AppendLine(Indent(1) + "public static " + enumType.Name + " FromString(string value)");
+            result.AppendLine(Indent(1) + "{");
+            result.AppendLine(Indent(2) + "if (value == null) throw new ArgumentNullException(\"value\");");
+            result.AppendLine();
+            result.AppendLine(Indent(2) + "var result = All().FirstOrDefault(x => x.ToString() == value);");
+            result.AppendLine(Indent(2) + "if (result != null) return result;");
+            result.AppendLine();
+            result.AppendLine(Indent(2) + "throw new ArgumentOutOfRangeException(\"value\", value, \"Invalid " + enumType.Name + "\");");
             result.AppendLine(Indent(1) + "}");
             result.AppendLine();
 

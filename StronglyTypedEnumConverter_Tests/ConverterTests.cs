@@ -205,6 +205,82 @@ namespace StronglyTypedEnumConverter
                 Assert.AreEqual(kvp.Key, kvp.Value.ToString());
         }
 
+        [TestMethod]
+        public void Converter_BasicEnum_HasFromStringMethod()
+        {
+            var type = ConvertBasicCowboyTypeEnum();
+
+            var hasFromStringMethod = type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .Any(f => f.Name == "FromString");
+
+            Assert.IsTrue(hasFromStringMethod);
+        }
+        
+        [TestMethod]
+        public void Converter_BasicEnum_FromStringReturnsValue()
+        {
+            var type = ConvertBasicCowboyTypeEnum();
+
+            var strings = new[] {"Good", "Bad", "Ugly"};
+
+            var fromStringMethod = type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .First(f => f.Name == "FromString");
+
+            var fields = type.GetFields(BindingFlags.Static | BindingFlags.Public)
+                .Where(f => f.IsInitOnly);
+
+            var map = strings.ToDictionary(
+                value => fields.First(f => f.Name == value).GetValue(null),
+                value => fromStringMethod.Invoke(null, new object[] {value}));
+
+            foreach (var kvp in map)
+                Assert.AreSame(kvp.Key, kvp.Value);            
+        }
+        
+        [TestMethod]
+        public void Converter_BasicEnum_FromStringWithNullThrowsArgNullException()
+        {
+            var type = ConvertBasicCowboyTypeEnum();
+
+            var fromStringMethod = type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .First(f => f.Name == "FromString");
+
+            try
+            {
+                fromStringMethod.Invoke(null, new object[] {null});
+            }
+            catch (TargetInvocationException ex)
+            {
+                Assert.IsInstanceOfType(ex.InnerException, typeof (ArgumentNullException));
+                return;
+            }
+
+            Assert.Fail("Expected exception did not occur");
+            
+        }
+        
+        [TestMethod]
+        public void Converter_BasicEnum_FromStringWithInvalidValueThrowsArgRangeException()
+        {
+            var type = ConvertBasicCowboyTypeEnum();
+
+            var fromStringMethod = type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .First(f => f.Name == "FromString");
+
+            try
+            {
+                fromStringMethod.Invoke(null, new object[] {"Garbage"});
+            }
+            catch (TargetInvocationException ex)
+            {
+                Assert.IsInstanceOfType(ex.InnerException, typeof (ArgumentOutOfRangeException));
+                StringAssert.Contains(ex.InnerException.Message, "Garbage");
+                return;
+            }
+
+            Assert.Fail("Expected exception did not occur");
+            
+        }
 
 
 

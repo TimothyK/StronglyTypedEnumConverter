@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -71,6 +72,24 @@ namespace StronglyTypedEnumConverter
                    && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic;
         }
 
+        /// <summary>
+        /// Returns the public static readonly fields that represent the Enum members
+        /// </summary>
+        /// <returns></returns>
+        private static IEnumerable<FieldInfo> GetEnumMembers()
+        {
+            return _type.GetFields(BindingFlags.Static | BindingFlags.Public)
+                .Where(f => f.IsInitOnly);
+        } 
+
+        private static object[] GetEnumValues()
+        {
+            return GetEnumMembers()
+                .Select(f => f.GetValue(null))
+                .Where(x => x != null)
+                .ToArray();
+        }
+
         [TestMethod]
         public void Class_SameNameAsEnum()
         {
@@ -92,8 +111,7 @@ namespace StronglyTypedEnumConverter
         [TestMethod]
         public void Members_HasThreeStaticReadOnlyFields()
         {
-            var fieldNames = _type.GetFields(BindingFlags.Static | BindingFlags.Public)
-                .Where(f => f.IsInitOnly)
+            var fieldNames = GetEnumMembers()
                 .Select(f => f.Name)
                 .ToArray();
 
@@ -109,15 +127,6 @@ namespace StronglyTypedEnumConverter
 
             Assert.AreEqual(values.Length, 3);
             Assert.AreEqual(values.Distinct().Count(), 3);
-        }
-
-        private static object[] GetEnumValues()
-        {
-            return _type.GetFields(BindingFlags.Static | BindingFlags.Public)
-                .Where(f => f.IsInitOnly)
-                .Select(f => f.GetValue(null))
-                .Where(x => x != null)
-                .ToArray();
         }
 
         [TestMethod]
@@ -147,9 +156,7 @@ namespace StronglyTypedEnumConverter
         [TestMethod]
         public void ToString_ReturnsExpected()
         {
-            var fields = _type.GetFields(BindingFlags.Static | BindingFlags.Public)
-                .Where(f => f.IsInitOnly)
-                .ToArray();
+            var fields = GetEnumMembers().ToArray();
 
             var fieldNamesAndValues = fields.ToDictionary(f => f.Name, f => f.GetValue(null));
             foreach (var kvp in fieldNamesAndValues)
@@ -173,8 +180,7 @@ namespace StronglyTypedEnumConverter
             var fromStringMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .First(f => f.Name == "FromString");
 
-            var fields = _type.GetFields(BindingFlags.Static | BindingFlags.Public)
-                .Where(f => f.IsInitOnly);
+            var fields = GetEnumMembers();
 
             var map = strings.ToDictionary(
                 value => fields.First(f => f.Name == value).GetValue(null),
@@ -221,11 +227,42 @@ namespace StronglyTypedEnumConverter
                 return;
             }
 
-            Assert.Fail("Expected exception did not occur");
-            
+            Assert.Fail("Expected exception did not occur");            
         }
 
+        [TestMethod]
+        public void ExplicitToInt_HasMethod()
+        {
+            var opExplicitMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .FirstOrDefault(f => f.Name == "op_Explicit");
 
+            Assert.IsNotNull(opExplicitMethod);
+        }
+
+        [TestMethod]
+        public void ExplicitToInt_Values_CastCorrectly()
+        {
+            var fields = GetEnumMembers().ToArray();
+
+            var opExplicitMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .First(f => f.Name == "op_Explicit");
+
+            var map = new Dictionary<string, int>
+            {
+                {"Good", 0}, 
+                {"Bad", 1}, 
+                {"Ugly", 2}            
+            };
+
+            foreach (var kvp in map)
+            {
+                var field = fields.First(f => f.Name == kvp.Key);
+                var enumValue = field.GetValue(null);
+                var actual = opExplicitMethod.Invoke(null, new[] {enumValue});
+                Assert.AreEqual(kvp.Value, actual, "Value of " + kvp.Key + " has incorrect integer mapping");
+            }
+
+        }
 
     }
     

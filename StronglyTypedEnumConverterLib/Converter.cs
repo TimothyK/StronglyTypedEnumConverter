@@ -11,10 +11,13 @@ namespace StronglyTypedEnumConverter
         public string Convert(string clrEnumDef)
         {
             var enumAssembly = CompileCode(clrEnumDef);
-            var enumType = enumAssembly.GetTypes().Single();            
+            var enumType = enumAssembly.GetTypes().Single();
 
-            var memberNames = enumType
+            var members = enumType
                 .GetFields(BindingFlags.Public | BindingFlags.Static)
+                .ToArray();
+
+            var memberNames = members
                 .Select(f => f.Name)
                 .ToArray();
 
@@ -74,6 +77,22 @@ namespace StronglyTypedEnumConverter
             result.AppendLine(Indent(2) + "if (result != null) return result;");
             result.AppendLine();
             result.AppendLine(Indent(2) + "throw new ArgumentOutOfRangeException(\"value\", value, \"Invalid " + enumType.Name + "\");");
+            result.AppendLine(Indent(1) + "}");
+            result.AppendLine();
+
+            //explicit cast to int
+            result.AppendLine(Indent(1) + "public static explicit operator int(" + enumType.Name + " value)");
+            result.AppendLine(Indent(1) + "{");
+            result.AppendLine(Indent(2) + "var map = new Dictionary<" + enumType.Name + ", int>");
+            result.AppendLine(Indent(2) + "{");
+            var castIntMappings = members
+                .Select(member => "{" + member.Name + ", " + (int) member.GetValue(null) + "}")
+                .ToArray();
+            result.Append(Indent(3));
+            result.AppendLine(string.Join(",\r\n" + Indent(3), castIntMappings));
+            result.AppendLine(Indent(2) + "};");
+            result.AppendLine();
+            result.AppendLine(Indent(2) + "return map[value];");
             result.AppendLine(Indent(1) + "}");
             result.AppendLine();
 

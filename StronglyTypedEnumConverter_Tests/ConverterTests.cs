@@ -191,6 +191,21 @@ namespace StronglyTypedEnumConverter
                 Assert.IsTrue(actual.Contains(item));
         }
 
+        [TestMethod]
+        public void Converter_BasicEnum_ToStringReturnsExpected()
+        {
+            var type = ConvertBasicCowboyTypeEnum();
+
+            var fields = type.GetFields(BindingFlags.Static | BindingFlags.Public)
+                .Where(f => f.IsInitOnly)
+                .ToArray();
+
+            var fieldNamesAndValues = fields.ToDictionary(f => f.Name, f => f.GetValue(null));
+            foreach (var kvp in fieldNamesAndValues)
+                Assert.AreEqual(kvp.Key, kvp.Value.ToString());
+        }
+
+
 
 
     }

@@ -46,10 +46,31 @@ namespace StronglyTypedEnumConverter
             result.AppendLine("    }");
             result.AppendLine();
 
+            //ToString method 
+            result.AppendLine(Indent(1) + "public override string ToString()");
+            result.AppendLine(Indent(1) + "{");
+            result.AppendLine(Indent(2) + "var map = new Dictionary<" + enumType.Name + ", string>");
+            result.AppendLine(Indent(2) + "{");            
+            var toStringMappings = memberNames
+                .Select(memberName => "{" + memberName + ", \"" + memberName + "\"}")
+                .ToArray();
+            result.Append(Indent(3));
+            result.AppendLine(string.Join(",\r\n" + Indent(3), toStringMappings));
+            result.AppendLine(Indent(2) + "};");
+            result.AppendLine();
+            result.AppendLine(Indent(2) + "return map[this];");
+            result.AppendLine(Indent(1) + "}");
+            result.AppendLine();
+
             //End of class definition
             result.AppendLine("}");
 
             return result.ToString();
+        }
+
+        private static string Indent(int count)
+        {
+            return new string(' ', count*4);
         }
 
         private static Assembly CompileCode(string sourceCode)

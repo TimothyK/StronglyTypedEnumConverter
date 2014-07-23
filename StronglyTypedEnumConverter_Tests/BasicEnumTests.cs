@@ -234,7 +234,9 @@ namespace StronglyTypedEnumConverter
         public void ExplicitToInt_HasMethod()
         {
             var opExplicitMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
-                .FirstOrDefault(f => f.Name == "op_Explicit");
+                .Where(f => f.Name == "op_Explicit")
+                .Where(f => f.ReturnType == typeof(int))
+                .SingleOrDefault(f => f.GetParameters().Single().ParameterType == _type);
 
             Assert.IsNotNull(opExplicitMethod);
         }
@@ -245,7 +247,9 @@ namespace StronglyTypedEnumConverter
             var fields = GetEnumMembers().ToArray();
 
             var opExplicitMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
-                .First(f => f.Name == "op_Explicit");
+                .Where(f => f.Name == "op_Explicit")
+                .Where(f => f.ReturnType == typeof(int))
+                .Single(f => f.GetParameters().Single().ParameterType == _type);
 
             var map = new Dictionary<string, int>
             {
@@ -263,6 +267,66 @@ namespace StronglyTypedEnumConverter
             }
 
         }
+
+        [TestMethod]
+        public void ExplicitFromInt_HasMethod()
+        {
+            var opExplicitMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .Where(f => f.Name == "op_Explicit")
+                .Where(f => f.ReturnType == _type)
+                .SingleOrDefault(f => f.GetParameters().Single().ParameterType == typeof(int));
+
+            Assert.IsNotNull(opExplicitMethod);
+        }
+
+        [TestMethod]
+        public void ExplicitFromInt_Values_CastCorrectly()
+        {
+            var fields = GetEnumMembers().ToArray();
+
+            var opExplicitMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .Where(f => f.Name == "op_Explicit")
+                .Where(f => f.ReturnType == _type)
+                .Single(f => f.GetParameters().Single().ParameterType == typeof(int));
+
+            var map = new Dictionary<string, int>
+            {
+                {"Good", 0}, 
+                {"Bad", 1}, 
+                {"Ugly", 2}            
+            };
+
+            foreach (var kvp in map)
+            {
+                var field = fields.First(f => f.Name == kvp.Key);
+                var expected = field.GetValue(null);
+                var actual = opExplicitMethod.Invoke(null, new object[] { kvp.Value });
+                Assert.AreEqual(expected, actual, "Value of " + kvp.Key + " has incorrect integer mapping");
+            }
+        }
+
+        [TestMethod]
+        public void ExplicitFromInt_InvalidValue_ThrowsInvalidCastException()
+        {
+            var opExplicitMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .Where(f => f.Name == "op_Explicit")
+                .Where(f => f.ReturnType == _type)
+                .Single(f => f.GetParameters().Single().ParameterType == typeof(int));
+
+            try
+            {
+                opExplicitMethod.Invoke(null, new object[] {3});
+            }
+            catch (TargetInvocationException ex)
+            {
+                Assert.IsInstanceOfType(ex.InnerException, typeof(InvalidCastException));
+                StringAssert.Contains(ex.InnerException.Message, "3");
+                return;
+            }
+
+            Assert.Fail("Expected exception did not occur");
+        }
+
 
     }
     

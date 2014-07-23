@@ -96,6 +96,15 @@ namespace StronglyTypedEnumConverter
             result.AppendLine(Indent(1) + "}");
             result.AppendLine();
 
+            //explicit cast from int
+            result.AppendLine(Indent(1) + "public static explicit operator " + enumType.Name + "(int value)");
+            result.AppendLine(Indent(1) + "{");
+            result.AppendLine(Indent(2) + "var result = All().FirstOrDefault(x => (int) x == value);");
+            result.AppendLine(Indent(2) + "if (result != null) return result;");
+            result.AppendLine();
+            result.AppendLine(Indent(2) + "throw new InvalidCastException(\"The value \" + value + \" is not a valid " + enumType.Name + "\");");
+            result.AppendLine(Indent(1) + "}");
+
             //End of class definition
             result.AppendLine("}");
 

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StronglyTypedEnumConverterL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StronglyTypedEnumConverter_Tests", "StronglyTypedEnumConverter_Tests\StronglyTypedEnumConverter_Tests.csproj", "{F7AE44D9-8326-4154-A689-1C6AA71F6EFF}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "StronglyTypedEnumConverter_VbTests", "StronglyTypedEnumConverter_VbTests\StronglyTypedEnumConverter_VbTests.vbproj", "{39E6C6CA-E2F7-4AF3-8AD5-DB2A25BDED50}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F7AE44D9-8326-4154-A689-1C6AA71F6EFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7AE44D9-8326-4154-A689-1C6AA71F6EFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7AE44D9-8326-4154-A689-1C6AA71F6EFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39E6C6CA-E2F7-4AF3-8AD5-DB2A25BDED50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39E6C6CA-E2F7-4AF3-8AD5-DB2A25BDED50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39E6C6CA-E2F7-4AF3-8AD5-DB2A25BDED50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39E6C6CA-E2F7-4AF3-8AD5-DB2A25BDED50}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -3,6 +3,7 @@ using System.CodeDom.Compiler;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using StronglyTypedEnumConverter.CodeGenerators;
 
 namespace StronglyTypedEnumConverter
 {
@@ -10,10 +11,12 @@ namespace StronglyTypedEnumConverter
     {
         public string Convert(string clrEnumDef)
         {
-            var enumAssembly = CompileCode(clrEnumDef);
+            var factory = LanguageAbstractFactory.Create(clrEnumDef);
+
+            var enumAssembly = CompileCode(clrEnumDef, factory.CodeProvider());
             var enumType = enumAssembly.GetTypes().Single();
 
-            CodeGenerator gen = new CSharpCodeGenerator(enumType);
+            var gen = factory.CodeGenerator(enumType);
 
             var result = new StringBuilder();
 
@@ -35,16 +38,15 @@ namespace StronglyTypedEnumConverter
             return result.ToString();
         }
 
-        private static Assembly CompileCode(string sourceCode)
-        {
-            var compiler = new Microsoft.CSharp.CSharpCodeProvider();
+        private static Assembly CompileCode(string sourceCode, CodeDomProvider codeProvider)
+        {            
             var parameters = new CompilerParameters
             {
                 GenerateInMemory = true,
                 GenerateExecutable = false
             };
 
-            var compilerOut = compiler.CompileAssemblyFromSource(parameters, sourceCode);
+            var compilerOut = codeProvider.CompileAssemblyFromSource(parameters, sourceCode);
 
             if (compilerOut.Errors.Count == 0)
                 return compilerOut.CompiledAssembly;

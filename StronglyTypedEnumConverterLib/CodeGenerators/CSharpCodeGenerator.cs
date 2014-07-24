@@ -1,42 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace StronglyTypedEnumConverter
 {
-    class CodeGenerator
+    class CSharpCodeGenerator : CodeGenerator
     {
-        private readonly Type _enumType;
-
-        public CodeGenerator(Type enumType)
+        public CSharpCodeGenerator(Type enumType) : base(enumType)
         {
-            _enumType = enumType;
         }
 
-        private string TypeName
-        {
-            get { return _enumType.Name; }
-        }
 
-        private IEnumerable<FieldInfo> Members
-        {
-            get { return _enumType.GetFields(BindingFlags.Public | BindingFlags.Static); }
-        }
-
-        private IEnumerable<string> MemberNames
-        {
-            get { return Members.Select(m => m.Name); }
-        } 
-
-
-        public string UsingStatement(string nameSpace)
+        public override string UsingStatement(string nameSpace)
         {
             return "using " + nameSpace + ";";
         }
 
-        public string StartClassDefinition()
+        public override string StartClassDefinition()
         {
             var result = new StringBuilder();
 
@@ -46,7 +26,7 @@ namespace StronglyTypedEnumConverter
             return result.ToString();
         }
 
-        public string PrivateConstructor()
+        public override string PrivateConstructor()
         {
             var result = new StringBuilder();
 
@@ -60,7 +40,7 @@ namespace StronglyTypedEnumConverter
             return new string(' ', count*4);
         }
 
-        public string StaticMembers()
+        public override string StaticMembers()
         {
             var result = new StringBuilder();
 
@@ -73,7 +53,7 @@ namespace StronglyTypedEnumConverter
             return result.ToString();
         }
 
-        public string AllMethod()
+        public override string AllMethod()
         {
             var result = new StringBuilder();
 
@@ -86,7 +66,7 @@ namespace StronglyTypedEnumConverter
             return result.ToString();
         }
 
-        public string ToStringMethod()
+        public override string ToStringMethod()
         {
             var result = new StringBuilder();
 
@@ -107,7 +87,7 @@ namespace StronglyTypedEnumConverter
             return result.ToString();
         }
 
-        public string FromStringMethod()
+        public override string FromStringMethod()
         {
             var result = new StringBuilder();
 
@@ -124,7 +104,7 @@ namespace StronglyTypedEnumConverter
             return result.ToString();
         }
 
-        public string CastToIntOperator()
+        public override string CastToIntOperator()
         {
             var result = new StringBuilder();
 
@@ -145,7 +125,7 @@ namespace StronglyTypedEnumConverter
             return result.ToString();
         }
 
-        public string CastFromIntOperator()
+        public override string CastFromIntOperator()
         {
             var result = new StringBuilder();
 
@@ -160,7 +140,7 @@ namespace StronglyTypedEnumConverter
             return result.ToString();
         }
 
-        public string EndClassDefinition()
+        public override string EndClassDefinition()
         {
             return "}";
         }

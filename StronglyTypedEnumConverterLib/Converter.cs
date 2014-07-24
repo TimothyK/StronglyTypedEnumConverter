@@ -13,7 +13,7 @@ namespace StronglyTypedEnumConverter
             var enumAssembly = CompileCode(clrEnumDef);
             var enumType = enumAssembly.GetTypes().Single();
 
-            var gen = new CodeGenerator(enumType);
+            CodeGenerator gen = new CSharpCodeGenerator(enumType);
 
             var result = new StringBuilder();
 

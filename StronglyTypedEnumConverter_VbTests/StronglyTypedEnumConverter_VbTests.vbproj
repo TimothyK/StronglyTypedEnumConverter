@@ -79,8 +79,10 @@
     <Import Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicEnumTests.vb" />
     <Compile Include="CowboyType.vb" />
     <Compile Include="CowboyTypeTests.vb" />
+    <Compile Include="InitializationTests.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

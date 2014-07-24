@@ -42,6 +42,7 @@
     <Compile Include="CodeGenerators\CodeGenerator.cs" />
     <Compile Include="CodeGenerators\CSharpCodeGenerator.cs" />
     <Compile Include="CodeGenerators\LanguageAbstractFactory.cs" />
+    <Compile Include="CodeGenerators\VbCodeGenerator.cs" />
     <Compile Include="Converter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

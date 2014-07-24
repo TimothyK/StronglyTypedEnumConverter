@@ -14,7 +14,9 @@ namespace StronglyTypedEnumConverter
             var factory = LanguageAbstractFactory.Create(clrEnumDef);
 
             var enumAssembly = CompileCode(clrEnumDef, factory.CodeProvider());
-            var enumType = enumAssembly.GetTypes().Single();
+            var enumType = enumAssembly
+                .GetTypes()
+                .Single(t => t.IsEnum);
 
             var gen = factory.CodeGenerator(enumType);
 

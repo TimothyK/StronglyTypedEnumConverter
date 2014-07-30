@@ -1,0 +1,22 @@
+﻿<Window x:Class="StronglyTypedEnumConverter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Strongly Typed Enum Converter" Height="350" Width="525" Icon="Barbell.ico">
+    <Grid>
+        <TextBox x:Name="txtInput" Height="118" Margin="10,10,10,0" VerticalAlignment="Top" 
+                 TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True"
+                 VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                 FontFamily="Courier New" 
+                 GotFocus="txtInput_OnGotFocus"
+                 />
+        <TextBox x:Name="txtOutput" Margin="10,160,10,10" 
+                 TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True" 
+                 VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                 FontFamily="Courier New"/>
+        <Button x:Name="btnConvert" Content="Convert" HorizontalAlignment="Left" Margin="77,133,0,0" VerticalAlignment="Top" Width="75"
+                Click="btnConvert_OnClick"
+                />
+        <Button Content="Paste, Convert &amp; Copy" HorizontalAlignment="Left" Margin="256,133,0,0" VerticalAlignment="Top" Width="161" Click="btnConvertClipboard_Click"/>
+
+    </Grid>
+</Window>

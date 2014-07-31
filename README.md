@@ -6,7 +6,7 @@ Converts a basic C# or VB enum to a strong typed enum class.
 A strongly typed enum class offers:
 * Invalid integers cannot be assigned
 * ToString can be overridden to yeild results different that the member names and survive obfuscators
-* The class provides an encapsulation point to add methods, properties, and operators
+* Solves the Primitive Obsession code smell
 * Provides the same intellisense goodness as a standard enum, plus discoverability with our custom added methods
 
 
@@ -53,10 +53,11 @@ class CowboyType
     //* To/From how this value is represented in a database or other external systems
 }
 ```
+Read more: http://geekswithblogs.net/TimothyK/archive/2014/07/31/strongly-typed-enum-pattern.aspx
 
-The conversion routine is hosted by a WPF desktop application.  
+The conversion routine is hosted by a simple WPF desktop application.  
 Its also available as a DLL so that if you want you can
-build a command line tool, Visual Studio or Resharper Add-in.
+build a command line tool, Visual Studio or Resharper Add-in (please share).
 
 
 License

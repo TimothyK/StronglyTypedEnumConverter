@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Shouldly;
 
 namespace StronglyTypedEnumConverter
 {
@@ -20,8 +21,7 @@ namespace StronglyTypedEnumConverter
                 return;
             }
 
-            Assert.Fail("Expected exception did not occur");
-            
+            Assert.Fail("Expected exception did not occur");            
         }
         
         [TestMethod]
@@ -37,8 +37,7 @@ namespace StronglyTypedEnumConverter
                 return;
             }
 
-            Assert.Fail("Expected exception did not occur");
-            
+            Assert.Fail("Expected exception did not occur");            
         }
 
         [TestMethod]
@@ -46,32 +45,32 @@ namespace StronglyTypedEnumConverter
         {
             var types = CowboyType.All().ToArray();
 
-            Assert.IsTrue(types.Contains(CowboyType.Good));
-            Assert.IsTrue(types.Contains(CowboyType.Bad));
-            Assert.IsTrue(types.Contains(CowboyType.Ugly));
+            types.ShouldContain(CowboyType.Good);
+            types.ShouldContain(CowboyType.Bad);
+            types.ShouldContain(CowboyType.Ugly);
         }
 
         [TestMethod]
         public void CowboyType_StringValuesRoundTrip_ReturnsOriginalValue()
         {
             foreach (var type in CowboyType.All())
-                Assert.AreSame(type, CowboyType.FromString(type.ToString()), type + " did not round trip successfully");
+                type.ShouldBeSameAs(CowboyType.FromString(type.ToString()), type + " did not round trip successfully");
         }
 
         [TestMethod]
         public void CowboyType_CastToInt_ReturnsExpected()
         {
-            Assert.AreEqual(0, (int) CowboyType.Good);
-            Assert.AreEqual(1, (int) CowboyType.Bad);
-            Assert.AreEqual(2, (int) CowboyType.Ugly);
+            ((int) CowboyType.Good).ShouldBe(0);
+            ((int) CowboyType.Bad).ShouldBe(1);
+            ((int) CowboyType.Ugly).ShouldBe(2);
         }
         
         [TestMethod]
         public void CowboyType_CastFromInt_ReturnsExpected()
         {
-            Assert.AreEqual(CowboyType.Good, (CowboyType) 0);
-            Assert.AreEqual(CowboyType.Bad, (CowboyType) 1);
-            Assert.AreEqual(CowboyType.Ugly, (CowboyType) 2);
+            ((CowboyType) 0).ShouldBe(CowboyType.Good);
+            ((CowboyType) 1).ShouldBe(CowboyType.Bad);
+            ((CowboyType) 2).ShouldBe(CowboyType.Ugly);
         }
 
         [TestMethod]
@@ -88,7 +87,6 @@ namespace StronglyTypedEnumConverter
             }
 
             Assert.Fail("Expected exception did not occur");
-
         }
 
     }

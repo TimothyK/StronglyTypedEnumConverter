@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Shouldly;
 
 namespace StronglyTypedEnumConverter
 {
@@ -10,7 +11,7 @@ namespace StronglyTypedEnumConverter
         public void Converter_Initialize_ObjectCreated()
         {
             var converter = new Converter();
-            Assert.IsNotNull(converter);
+            converter.ShouldNotBeNull();
         }
 
 

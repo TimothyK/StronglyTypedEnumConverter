@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Shouldly;
+using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace StronglyTypedEnumConverter
 {
@@ -46,14 +47,14 @@ namespace StronglyTypedEnumConverter
 
             var compilerOut = compiler.CompileAssemblyFromSource(parameters, sourceCode);
 
-            if (compilerOut.Errors.Count == 0) 
+            if (compilerOut.Errors.Count == 0)
                 return compilerOut.CompiledAssembly;
 
             foreach (var error in compilerOut.Errors)
                 Console.Error.WriteLine(error.ToString());
             throw new ApplicationException("Could Not Compile Code");
         }
-       
+
         /// <summary>
         /// Returns true if the Type is anonymous
         /// </summary>
@@ -65,7 +66,7 @@ namespace StronglyTypedEnumConverter
         {
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
-            
+
             return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false)
                    && (type.Name.StartsWith("<") || type.Name.StartsWith("VB$"))
                    && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic;
@@ -79,7 +80,7 @@ namespace StronglyTypedEnumConverter
         {
             return _type.GetFields(BindingFlags.Static | BindingFlags.Public)
                 .Where(f => f.IsInitOnly);
-        } 
+        }
 
         private static object[] GetEnumValues()
         {
@@ -92,21 +93,27 @@ namespace StronglyTypedEnumConverter
         [TestMethod]
         public void Class_SameNameAsEnum()
         {
-            Assert.AreEqual("CowboyType", _type.Name);
+            _type.Name.ShouldBe("CowboyType");
         }
 
         [TestMethod]
         public void Class_HasPrivateConstructor()
         {
-            Assert.IsTrue(_type.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).Any());            
+            _type
+                .GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Any()
+                .ShouldBeTrue();
         }
-        
+
         [TestMethod]
         public void Class_HasNoPublicConstructor()
         {
-            Assert.IsFalse(_type.GetConstructors(BindingFlags.Public | BindingFlags.Instance).Any());
+            _type
+                .GetConstructors(BindingFlags.Public | BindingFlags.Instance)
+                .Any()
+                .ShouldBeFalse();
         }
-        
+
         [TestMethod]
         public void Members_HasThreeStaticReadOnlyFields()
         {
@@ -114,18 +121,18 @@ namespace StronglyTypedEnumConverter
                 .Select(f => f.Name)
                 .ToArray();
 
-            Assert.IsTrue(fieldNames.Contains("Good"));     
-            Assert.IsTrue(fieldNames.Contains("Bad"));     
-            Assert.IsTrue(fieldNames.Contains("Ugly"));     
+            fieldNames.ShouldContain("Good");
+            fieldNames.ShouldContain("Bad");
+            fieldNames.ShouldContain("Ugly");
         }
-        
+
         [TestMethod]
         public void Members_HaveUniqueValues()
         {
             var values = GetEnumValues();
 
-            Assert.AreEqual(values.Length, 3);
-            Assert.AreEqual(values.Distinct().Count(), 3);
+            values.Length.ShouldBe(3);
+            values.Distinct().Count().ShouldBe(3);
         }
 
         [TestMethod]
@@ -134,9 +141,9 @@ namespace StronglyTypedEnumConverter
             var hasAllMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Any(f => f.Name == "All");
 
-            Assert.IsTrue(hasAllMethod);     
+            hasAllMethod.ShouldBeTrue();
         }
-        
+
         [TestMethod]
         public void All_ReturnsAllValues()
         {
@@ -145,11 +152,11 @@ namespace StronglyTypedEnumConverter
             var allMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Single(f => f.Name == "All");
 
-            var actual = ((IEnumerable<object>) allMethod.Invoke(null, null)).ToArray();
+            var actual = ((IEnumerable<object>)allMethod.Invoke(null, null)).ToArray();
 
             Assert.AreEqual(expected.Length, actual.Length);
             foreach (var item in expected)
-                Assert.IsTrue(actual.Contains(item));
+                actual.ShouldContain(item);
         }
 
         [TestMethod]
@@ -159,7 +166,7 @@ namespace StronglyTypedEnumConverter
 
             var fieldNamesAndValues = fields.ToDictionary(f => f.Name, f => f.GetValue(null));
             foreach (var kvp in fieldNamesAndValues)
-                Assert.AreEqual(kvp.Key, kvp.Value.ToString());
+                kvp.Key.ShouldBe(kvp.Value.ToString());
         }
 
         [TestMethod]
@@ -168,13 +175,13 @@ namespace StronglyTypedEnumConverter
             var hasFromStringMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Any(f => f.Name == "FromString");
 
-            Assert.IsTrue(hasFromStringMethod);
+            hasFromStringMethod.ShouldBeTrue();
         }
-        
+
         [TestMethod]
         public void FromString_ValidInputs_ReturnsValidValues()
         {
-            var strings = new[] {"Good", "Bad", "Ugly"};
+            var strings = new[] { "Good", "Bad", "Ugly" };
 
             var fromStringMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .First(f => f.Name == "FromString");
@@ -183,12 +190,12 @@ namespace StronglyTypedEnumConverter
 
             var map = strings.ToDictionary(
                 value => fields.First(f => f.Name == value).GetValue(null),
-                value => fromStringMethod.Invoke(null, new object[] {value}));
+                value => fromStringMethod.Invoke(null, new object[] { value }));
 
             foreach (var kvp in map)
-                Assert.AreSame(kvp.Key, kvp.Value);            
+                kvp.Key.ShouldBeSameAs(kvp.Value);
         }
-        
+
         [TestMethod]
         public void FromString_NullInput_ThrowsArgNullException()
         {
@@ -197,18 +204,17 @@ namespace StronglyTypedEnumConverter
 
             try
             {
-                fromStringMethod.Invoke(null, new object[] {null});
+                fromStringMethod.Invoke(null, new object[] { null });
             }
             catch (TargetInvocationException ex)
             {
-                Assert.IsInstanceOfType(ex.InnerException, typeof (ArgumentNullException));
+                ex.InnerException.ShouldBeOfType<ArgumentNullException>();
                 return;
             }
 
             Assert.Fail("Expected exception did not occur");
-            
         }
-        
+
         [TestMethod]
         public void FromString_GarbageInput_ThrowsArgRangeException()
         {
@@ -217,18 +223,18 @@ namespace StronglyTypedEnumConverter
 
             try
             {
-                fromStringMethod.Invoke(null, new object[] {"Garbage"});
+                fromStringMethod.Invoke(null, new object[] { "Garbage" });
             }
             catch (TargetInvocationException ex)
             {
                 var innerException = ex.InnerException;
-                Assert.IsNotNull(innerException);
-                Assert.IsInstanceOfType(innerException, typeof (ArgumentOutOfRangeException));
-                StringAssert.Contains(innerException.Message, "Garbage");
+                innerException.ShouldNotBeNull();
+                innerException.ShouldBeOfType<ArgumentOutOfRangeException>();
+                innerException.Message.ShouldContain("Garbage");
                 return;
             }
 
-            Assert.Fail("Expected exception did not occur");            
+            Assert.Fail("Expected exception did not occur");
         }
 
         [TestMethod]
@@ -239,7 +245,7 @@ namespace StronglyTypedEnumConverter
                 .Where(f => f.ReturnType == typeof(int))
                 .SingleOrDefault(f => f.GetParameters().Single().ParameterType == _type);
 
-            Assert.IsNotNull(opExplicitMethod);
+            opExplicitMethod.ShouldNotBeNull();
         }
 
         [TestMethod]
@@ -254,17 +260,17 @@ namespace StronglyTypedEnumConverter
 
             var map = new Dictionary<string, int>
             {
-                {"Good", 0}, 
-                {"Bad", 1}, 
-                {"Ugly", 2}            
+                {"Good", 0},
+                {"Bad", 1},
+                {"Ugly", 2}
             };
 
             foreach (var kvp in map)
             {
                 var field = fields.First(f => f.Name == kvp.Key);
                 var enumValue = field.GetValue(null);
-                var actual = opExplicitMethod.Invoke(null, new[] {enumValue});
-                Assert.AreEqual(kvp.Value, actual, "Value of " + kvp.Key + " has incorrect integer mapping");
+                var actual = opExplicitMethod.Invoke(null, new[] { enumValue });
+                actual.ShouldBe(kvp.Value, "Value of " + kvp.Key + " has incorrect integer mapping");
             }
 
         }
@@ -277,7 +283,7 @@ namespace StronglyTypedEnumConverter
                 .Where(f => f.ReturnType == _type)
                 .SingleOrDefault(f => f.GetParameters().Single().ParameterType == typeof(int));
 
-            Assert.IsNotNull(opExplicitMethod);
+            opExplicitMethod.ShouldNotBeNull();
         }
 
         [TestMethod]
@@ -292,9 +298,9 @@ namespace StronglyTypedEnumConverter
 
             var map = new Dictionary<string, int>
             {
-                {"Good", 0}, 
-                {"Bad", 1}, 
-                {"Ugly", 2}            
+                {"Good", 0},
+                {"Bad", 1},
+                {"Ugly", 2}
             };
 
             foreach (var kvp in map)
@@ -302,7 +308,7 @@ namespace StronglyTypedEnumConverter
                 var field = fields.First(f => f.Name == kvp.Key);
                 var expected = field.GetValue(null);
                 var actual = opExplicitMethod.Invoke(null, new object[] { kvp.Value });
-                Assert.AreEqual(expected, actual, "Value of " + kvp.Key + " has incorrect integer mapping");
+                actual.ShouldBe(expected, "Value of " + kvp.Key + " has incorrect integer mapping");
             }
         }
 
@@ -316,14 +322,14 @@ namespace StronglyTypedEnumConverter
 
             try
             {
-                opExplicitMethod.Invoke(null, new object[] {3});
+                opExplicitMethod.Invoke(null, new object[] { 3 });
             }
             catch (TargetInvocationException ex)
             {
                 var innerException = ex.InnerException;
-                Assert.IsNotNull(innerException);
-                Assert.IsInstanceOfType(innerException, typeof(InvalidCastException));
-                StringAssert.Contains(innerException.Message, "3");
+                innerException.ShouldNotBeNull();
+                innerException.ShouldBeOfType<InvalidCastException>();
+                innerException.Message.ShouldContain("3");
                 return;
             }
 
@@ -332,5 +338,5 @@ namespace StronglyTypedEnumConverter
 
 
     }
-    
+
 }

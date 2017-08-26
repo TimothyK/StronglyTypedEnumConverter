@@ -57,10 +57,12 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BasicEnumTests.cs" />
+    <Compile Include="Compiler.cs" />
     <Compile Include="CowboyType.cs" />
     <Compile Include="CowboyTypeTests.cs" />
     <Compile Include="InitializationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReflectionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\StronglyTypedEnumConverterLib\StronglyTypedEnumConverterLib.csproj">

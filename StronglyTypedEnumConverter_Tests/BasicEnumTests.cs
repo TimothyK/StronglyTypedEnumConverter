@@ -64,7 +64,7 @@ namespace StronglyTypedEnumConverter
         private static bool IsAnonymousType(Type type)
         {
             if (type == null)
-                throw new ArgumentNullException("type");
+                throw new ArgumentNullException(nameof(type));
             
             return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false)
                    && (type.Name.StartsWith("<") || type.Name.StartsWith("VB$"))
@@ -221,8 +221,10 @@ namespace StronglyTypedEnumConverter
             }
             catch (TargetInvocationException ex)
             {
-                Assert.IsInstanceOfType(ex.InnerException, typeof (ArgumentOutOfRangeException));
-                StringAssert.Contains(ex.InnerException.Message, "Garbage");
+                var innerException = ex.InnerException;
+                Assert.IsNotNull(innerException);
+                Assert.IsInstanceOfType(innerException, typeof (ArgumentOutOfRangeException));
+                StringAssert.Contains(innerException.Message, "Garbage");
                 return;
             }
 
@@ -318,8 +320,10 @@ namespace StronglyTypedEnumConverter
             }
             catch (TargetInvocationException ex)
             {
-                Assert.IsInstanceOfType(ex.InnerException, typeof(InvalidCastException));
-                StringAssert.Contains(ex.InnerException.Message, "3");
+                var innerException = ex.InnerException;
+                Assert.IsNotNull(innerException);
+                Assert.IsInstanceOfType(innerException, typeof(InvalidCastException));
+                StringAssert.Contains(innerException.Message, "3");
                 return;
             }
 

@@ -14,15 +14,9 @@ namespace StronglyTypedEnumConverter
             _enumType = enumType;
         }
 
-        protected string TypeName
-        {
-            get { return _enumType.Name; }
-        }
+        protected string TypeName => _enumType.Name;
 
-        protected IEnumerable<FieldInfo> Members
-        {
-            get { return _enumType.GetFields(BindingFlags.Public | BindingFlags.Static); }
-        }
+        protected IEnumerable<FieldInfo> Members => _enumType.GetFields(BindingFlags.Public | BindingFlags.Static);
 
         protected IEnumerable<string> MemberNames
         {

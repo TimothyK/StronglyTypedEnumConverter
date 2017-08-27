@@ -57,6 +57,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BasicEnumTests.cs" />
+    <Compile Include="ByteEnumTests.cs" />
     <Compile Include="Compiler.cs" />
     <Compile Include="CowboyType.cs" />
     <Compile Include="CowboyTypeTests.cs" />

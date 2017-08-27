@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace StronglyTypedEnumConverter
 {
-    class CSharpCodeGenerator : CodeGenerator
+    internal class CSharpCodeGenerator : CodeGenerator
     {
         public CSharpCodeGenerator(Type enumType) : base(enumType)
         {
@@ -104,41 +105,71 @@ namespace StronglyTypedEnumConverter
             return result.ToString();
         }
 
-        public override string CastToIntOperator()
+        public override string CastToUnderlyingOperator()
         {
             var result = new StringBuilder();
 
-            result.AppendLine(Indent(1) + "public static explicit operator int(" + TypeName + " value)");
-            result.AppendLine(Indent(1) + "{");
-            result.AppendLine(Indent(2) + "var map = new Dictionary<" + TypeName + ", int>");
-            result.AppendLine(Indent(2) + "{");
+            var underlyingTypeName = Aliases[UnderlyingType];
+            result.AppendLine($"{Indent(1)}public static explicit operator {underlyingTypeName}({TypeName} value)");
+            result.AppendLine($"{Indent(1)}{{");
+            result.AppendLine($"{Indent(2)}var map = new Dictionary<{TypeName}, {underlyingTypeName}>");
+            result.AppendLine($"{Indent(2)}{{");
             var castIntMappings = Members
-                .Select(member => "{" + member.Name + ", " + (int)member.GetValue(null) + "}")
+                .Select(member => $"{{{member.Name}, {Convert.ChangeType(member.GetValue(null), UnderlyingType)}}}")
                 .ToArray();
             result.Append(Indent(3));
-            result.AppendLine(string.Join(",\r\n" + Indent(3), castIntMappings));
-            result.AppendLine(Indent(2) + "};");
+            result.AppendLine(string.Join($",\r\n{Indent(3)}", castIntMappings));
+            result.AppendLine($"{Indent(2)}}};");
             result.AppendLine();
-            result.AppendLine(Indent(2) + "return map[value];");
-            result.AppendLine(Indent(1) + "}");
+            result.AppendLine($"{Indent(2)}return map[value];");
+            result.AppendLine($"{Indent(1)}}}");
 
             return result.ToString();
         }
 
-        public override string CastFromIntOperator()
+        public override string CastFromUnderlyingOperator()
         {
             var result = new StringBuilder();
 
-            result.AppendLine(Indent(1) + "public static explicit operator " + TypeName + "(int value)");
-            result.AppendLine(Indent(1) + "{");
-            result.AppendLine(Indent(2) + "var result = All().FirstOrDefault(x => (int) x == value);");
-            result.AppendLine(Indent(2) + "if (result != null) return result;");
+            var underlyingTypeName = Aliases[UnderlyingType];
+            result.AppendLine($"{Indent(1)}public static explicit operator {TypeName}({underlyingTypeName} value)");
+            result.AppendLine($"{Indent(1)}{{");
+            result.AppendLine($"{Indent(2)}var result = All().FirstOrDefault(x => ({underlyingTypeName}) x == value);");
+            result.AppendLine($"{Indent(2)}if (result != null) return result;");
             result.AppendLine();
-            result.AppendLine(Indent(2) + "throw new InvalidCastException(\"The value \" + value + \" is not a valid " + TypeName + "\");");
-            result.AppendLine(Indent(1) + "}");
+            result.AppendLine($"{Indent(2)}throw new InvalidCastException(\"The value \" + value + \" is not a valid {TypeName}\");");
+            result.AppendLine($"{Indent(1)}}}");
 
             return result.ToString();
         }
+
+        /// <summary>
+        /// C# Alias for all .NET Types
+        /// </summary>
+        /// <remarks>
+        /// Credit Jon Skeet:
+        /// https://stackoverflow.com/questions/1362884/is-there-a-way-to-get-a-types-alias-through-reflection
+        /// </remarks>
+        private static readonly Dictionary<Type, string> Aliases =
+            new Dictionary<Type, string>
+            {
+                { typeof(byte), "byte" },
+                { typeof(sbyte), "sbyte" },
+                { typeof(short), "short" },
+                { typeof(ushort), "ushort" },
+                { typeof(int), "int" },
+                { typeof(uint), "uint" },
+                { typeof(long), "long" },
+                { typeof(ulong), "ulong" },
+                { typeof(float), "float" },
+                { typeof(double), "double" },
+                { typeof(decimal), "decimal" },
+                { typeof(object), "object" },
+                { typeof(bool), "bool" },
+                { typeof(char), "char" },
+                { typeof(string), "string" },
+                { typeof(void), "void" }
+            };   
 
         public override string EndClassDefinition()
         {

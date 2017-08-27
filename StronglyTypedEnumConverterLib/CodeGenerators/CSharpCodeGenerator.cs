@@ -70,18 +70,20 @@ namespace StronglyTypedEnumConverter
         {
             var result = new StringBuilder();
 
-            result.AppendLine($"{Indent(1)}public override string ToString()");
+            result
+                .AppendLine($"{Indent(1)}private static readonly Dictionary<{TypeName}, string> ToStringMap = new Dictionary<{TypeName}, string>");
             result.AppendLine($"{Indent(1)}{{");
-            result.AppendLine($"{Indent(2)}var map = new Dictionary<{TypeName}, string>");
-            result.AppendLine($"{Indent(2)}{{");
             var toStringMappings = MemberNames
                 .Select(memberName => $"{{{memberName}, \"{memberName}\"}}")
                 .ToArray();
-            result.Append(Indent(3));
-            result.AppendLine(string.Join($",\r\n{Indent(3)}", toStringMappings));
-            result.AppendLine($"{Indent(2)}}};");
+            result.Append(Indent(2));
+            result.AppendLine(string.Join($",\r\n{Indent(2)}", toStringMappings));
+            result.AppendLine($"{Indent(1)}}};");
             result.AppendLine();
-            result.AppendLine($"{Indent(2)}return map[this];");
+
+            result.AppendLine($"{Indent(1)}public override string ToString()");
+            result.AppendLine($"{Indent(1)}{{");
+            result.AppendLine($"{Indent(2)}return ToStringMap[this];");
             result.AppendLine($"{Indent(1)}}}");
 
             return result.ToString();

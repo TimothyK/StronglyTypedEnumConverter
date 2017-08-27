@@ -22,16 +22,17 @@ namespace StronglyTypedEnumConverter
             yield return Ugly;
         }
 
+        private static readonly Dictionary<CowboyType, string> ToStringMap = new Dictionary<CowboyType, string>
+        {
+            {Good, "Good"},
+            {Bad, "Bad"},
+            {Ugly, "Ugly"}
+        };
+
+
         public override string ToString()
         {
-            var map = new Dictionary<CowboyType, string>
-            {
-                {Good, "Good"},
-                {Bad, "Bad"},
-                {Ugly, "Ugly"}
-            };
-
-            return map[this];
+            return ToStringMap[this];
         }
 
         public static CowboyType FromString(string value)

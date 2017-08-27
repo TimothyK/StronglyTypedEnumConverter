@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
 using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -17,78 +16,40 @@ namespace StronglyTypedEnumConverter
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
-            _type = ConvertBasicCowboyTypeEnum();
+            _type = CompiledStrongTypeFromEnumSourceCode("enum CowboyType {Good,Bad,Ugly};");
+            EnumMembers = _type.GetEnumMembers();
+            EnumValues = _type.GetEnumMemberValues();
         }
 
-        private const string CowboyTypeEnumDef = "enum CowboyType {Good,Bad,Ugly};";
-
-        private static Type ConvertBasicCowboyTypeEnum()
+        
+        /// <summary>
+        /// Compiles enum source code to an in-memory strongly typed Type
+        /// </summary>
+        /// <param name="enumSourceCode"></param>
+        /// <returns></returns>
+        private static Type CompiledStrongTypeFromEnumSourceCode(string enumSourceCode)
         {
             var converter = new Converter();
-            var sourceCode = converter.Convert(CowboyTypeEnumDef);
-            Console.WriteLine(sourceCode);
+            var stronglyTypedSourceCode = converter.Convert(enumSourceCode);
+            Console.WriteLine(stronglyTypedSourceCode);
 
-            var assembly = CompileCode(sourceCode);
+            var compiler = new Compiler();
+            var assembly = compiler.Compile(stronglyTypedSourceCode);
 
-            var type = assembly.GetTypes().SingleOrDefault(t => !IsAnonymousType(t));
+            var type = assembly.GetTypes().SingleOrDefault(t => !t.IsAnonymous());
             return type;
-        }
-
-        private static Assembly CompileCode(string sourceCode)
-        {
-            var compiler = new Microsoft.CSharp.CSharpCodeProvider();
-            var parameters = new CompilerParameters
-            {
-                GenerateInMemory = true,
-                GenerateExecutable = false
-            };
-            parameters.ReferencedAssemblies.Add("System.dll");
-            parameters.ReferencedAssemblies.Add("System.Core.dll");
-
-            var compilerOut = compiler.CompileAssemblyFromSource(parameters, sourceCode);
-
-            if (compilerOut.Errors.Count == 0)
-                return compilerOut.CompiledAssembly;
-
-            foreach (var error in compilerOut.Errors)
-                Console.Error.WriteLine(error.ToString());
-            throw new ApplicationException("Could Not Compile Code");
-        }
-
-        /// <summary>
-        /// Returns true if the Type is anonymous
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns>
-        /// Credit: http://www.liensberger.it/web/blog/?p=191
-        /// </returns>
-        private static bool IsAnonymousType(Type type)
-        {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-
-            return Attribute.IsDefined(type, typeof(CompilerGeneratedAttribute), false)
-                   && (type.Name.StartsWith("<") || type.Name.StartsWith("VB$"))
-                   && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic;
         }
 
         /// <summary>
         /// Returns the public static readonly fields that represent the Enum members
         /// </summary>
-        /// <returns></returns>
-        private static IEnumerable<FieldInfo> GetEnumMembers()
-        {
-            return _type.GetFields(BindingFlags.Static | BindingFlags.Public)
-                .Where(f => f.IsInitOnly);
-        }
+        /// <value></value>
+        private static IEnumerable<FieldInfo> EnumMembers { get; set; }
 
-        private static object[] GetEnumValues()
-        {
-            return GetEnumMembers()
-                .Select(f => f.GetValue(null))
-                .Where(x => x != null)
-                .ToArray();
-        }
+        /// <summary>
+        /// 
+        /// </summary>
+        private static object[] EnumValues { get; set; }
 
         [TestMethod]
         public void Class_SameNameAsEnum()
@@ -117,7 +78,7 @@ namespace StronglyTypedEnumConverter
         [TestMethod]
         public void Members_HasThreeStaticReadOnlyFields()
         {
-            var fieldNames = GetEnumMembers()
+            var fieldNames = EnumMembers
                 .Select(f => f.Name)
                 .ToArray();
 
@@ -129,7 +90,7 @@ namespace StronglyTypedEnumConverter
         [TestMethod]
         public void Members_HaveUniqueValues()
         {
-            var values = GetEnumValues();
+            var values = EnumValues;
 
             values.Length.ShouldBe(3);
             values.Distinct().Count().ShouldBe(3);
@@ -147,7 +108,7 @@ namespace StronglyTypedEnumConverter
         [TestMethod]
         public void All_ReturnsAllValues()
         {
-            var expected = GetEnumValues();
+            var expected = EnumValues;
 
             var allMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Single(f => f.Name == "All");
@@ -162,7 +123,7 @@ namespace StronglyTypedEnumConverter
         [TestMethod]
         public void ToString_ReturnsExpected()
         {
-            var fields = GetEnumMembers().ToArray();
+            var fields = EnumMembers.ToArray();
 
             var fieldNamesAndValues = fields.ToDictionary(f => f.Name, f => f.GetValue(null));
             foreach (var kvp in fieldNamesAndValues)
@@ -186,7 +147,7 @@ namespace StronglyTypedEnumConverter
             var fromStringMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .First(f => f.Name == "FromString");
 
-            var fields = GetEnumMembers();
+            var fields = EnumMembers;
 
             var map = strings.ToDictionary(
                 value => fields.First(f => f.Name == value).GetValue(null),
@@ -251,7 +212,7 @@ namespace StronglyTypedEnumConverter
         [TestMethod]
         public void ExplicitToInt_Values_CastCorrectly()
         {
-            var fields = GetEnumMembers().ToArray();
+            var fields = EnumMembers.ToArray();
 
             var opExplicitMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Where(f => f.Name == "op_Explicit")
@@ -289,7 +250,7 @@ namespace StronglyTypedEnumConverter
         [TestMethod]
         public void ExplicitFromInt_Values_CastCorrectly()
         {
-            var fields = GetEnumMembers().ToArray();
+            var fields = EnumMembers.ToArray();
 
             var opExplicitMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
                 .Where(f => f.Name == "op_Explicit")

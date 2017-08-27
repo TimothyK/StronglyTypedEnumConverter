@@ -100,7 +100,7 @@ namespace StronglyTypedEnumConverter.CodeGenerators
             return result.ToString();
         }
 
-        public override string CastToIntOperator()
+        public override string CastToUnderlyingOperator()
         {
             var result = new StringBuilder();
 
@@ -119,7 +119,7 @@ namespace StronglyTypedEnumConverter.CodeGenerators
             return result.ToString();
         }
 
-        public override string CastFromIntOperator()
+        public override string CastFromUnderlyingOperator()
         {
             var result = new StringBuilder();
 

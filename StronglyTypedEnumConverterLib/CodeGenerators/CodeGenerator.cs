@@ -23,6 +23,8 @@ namespace StronglyTypedEnumConverter
             get { return Members.Select(m => m.Name); }
         }
 
+        protected Type UnderlyingType => _enumType.GetEnumUnderlyingType();
+
         public abstract string UsingStatement(string nameSpace);
         public abstract string StartClassDefinition();
         public abstract string PrivateConstructor();
@@ -30,8 +32,8 @@ namespace StronglyTypedEnumConverter
         public abstract string AllMethod();
         public abstract string ToStringMethod();
         public abstract string FromStringMethod();
-        public abstract string CastToIntOperator();
-        public abstract string CastFromIntOperator();
+        public abstract string CastToUnderlyingOperator();
+        public abstract string CastFromUnderlyingOperator();
         public abstract string EndClassDefinition();
     }
 }

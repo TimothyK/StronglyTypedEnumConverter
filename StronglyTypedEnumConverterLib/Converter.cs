@@ -36,8 +36,8 @@ namespace StronglyTypedEnumConverter
             result.AppendLine(gen.AllMethod());
             result.AppendLine(gen.ToStringMethod());
             result.AppendLine(gen.FromStringMethod());
-            result.AppendLine(gen.CastToIntOperator());
-            result.AppendLine(gen.CastFromIntOperator());
+            result.AppendLine(gen.CastToUnderlyingOperator());
+            result.AppendLine(gen.CastFromUnderlyingOperator());
             result.AppendLine(gen.EndClassDefinition());
 
             return result.ToString();

@@ -45,16 +45,16 @@ namespace StronglyTypedEnumConverter
             throw new ArgumentOutOfRangeException("value", value, "Invalid CowboyType");
         }
 
+        private static readonly Dictionary<CowboyType, int> UnderlyingMap = new Dictionary<CowboyType, int>
+        {
+            {Good, 0},
+            {Bad, 1},
+            {Ugly, 2}
+        };
+
         public static explicit operator int(CowboyType value)
         {
-            var map = new Dictionary<CowboyType, int>
-            {
-                {Good, 0},
-                {Bad, 1},
-                {Ugly, 2}
-            };
-
-            return map[value];            
+            return UnderlyingMap[value];            
         }
 
         public static explicit operator CowboyType(int value)

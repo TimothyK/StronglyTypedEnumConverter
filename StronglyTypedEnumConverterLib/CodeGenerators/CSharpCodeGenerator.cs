@@ -112,18 +112,21 @@ namespace StronglyTypedEnumConverter
             var result = new StringBuilder();
 
             var underlyingTypeName = Aliases[UnderlyingType];
-            result.AppendLine($"{Indent(1)}public static explicit operator {underlyingTypeName}({TypeName} value)");
+
+            result.Append($"{Indent(1)}private static readonly Dictionary<{TypeName}, {underlyingTypeName}> UnderlyingMap")
+                .AppendLine($" = new Dictionary<{TypeName}, {underlyingTypeName}>");
             result.AppendLine($"{Indent(1)}{{");
-            result.AppendLine($"{Indent(2)}var map = new Dictionary<{TypeName}, {underlyingTypeName}>");
-            result.AppendLine($"{Indent(2)}{{");
             var castIntMappings = Members
                 .Select(member => $"{{{member.Name}, {Convert.ChangeType(member.GetValue(null), UnderlyingType)}}}")
                 .ToArray();
-            result.Append(Indent(3));
-            result.AppendLine(string.Join($",\r\n{Indent(3)}", castIntMappings));
-            result.AppendLine($"{Indent(2)}}};");
+            result.Append(Indent(2));
+            result.AppendLine(string.Join($",\r\n{Indent(2)}", castIntMappings));
+            result.AppendLine($"{Indent(1)}}};");
             result.AppendLine();
-            result.AppendLine($"{Indent(2)}return map[value];");
+
+            result.AppendLine($"{Indent(1)}public static explicit operator {underlyingTypeName}({TypeName} value)");
+            result.AppendLine($"{Indent(1)}{{");
+            result.AppendLine($"{Indent(2)}return UnderlyingMap[value];");
             result.AppendLine($"{Indent(1)}}}");
 
             return result.ToString();

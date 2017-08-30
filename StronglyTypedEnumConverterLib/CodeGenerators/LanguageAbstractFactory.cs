@@ -1,6 +1,5 @@
 ﻿using System;
 using System.CodeDom.Compiler;
-using System.Text.RegularExpressions;
 
 namespace StronglyTypedEnumConverter.CodeGenerators
 {
@@ -8,17 +7,9 @@ namespace StronglyTypedEnumConverter.CodeGenerators
     {
         public static LanguageAbstractFactory Create(string sourceCode)
         {
-            if (IsVisualBasic(sourceCode))
-                return new VbAbstractFactory() ;
-
             return new CSharpAbstractFactory();
         }
-
-        private static bool IsVisualBasic(string sourceCode)
-        {
-            return Regex.IsMatch(sourceCode, "Enum .*End *Enum", RegexOptions.Singleline);
-        }
-
+        
         public abstract CodeGenerator CodeGenerator(Type enumType);
         public abstract CodeDomProvider CodeProvider();
     }
@@ -36,16 +27,4 @@ namespace StronglyTypedEnumConverter.CodeGenerators
         }
     }
 
-    class VbAbstractFactory : LanguageAbstractFactory
-    {
-        public override CodeGenerator CodeGenerator(Type enumType)
-        {
-            return new VbCodeGenerator(enumType);
-        }
-
-        public override CodeDomProvider CodeProvider()
-        {
-            return new Microsoft.VisualBasic.VBCodeProvider();
-        }
-    }
 }

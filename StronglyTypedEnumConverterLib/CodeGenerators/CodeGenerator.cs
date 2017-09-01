@@ -26,6 +26,8 @@ namespace StronglyTypedEnumConverter
         protected Type UnderlyingType => _enumType.GetEnumUnderlyingType();
 
         public abstract string UsingStatement(string nameSpace);
+        public abstract string RegionStart(string regionName);
+        public abstract string RegionEnd();
         public abstract string StartClassDefinition();
         public abstract string PrivateConstructor();
         public abstract string StaticMembers();

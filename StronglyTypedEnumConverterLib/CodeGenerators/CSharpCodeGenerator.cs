@@ -17,6 +17,26 @@ namespace StronglyTypedEnumConverter
             return $"using {nameSpace};";
         }
 
+        public override string RegionStart(string regionName)
+        {
+            var result = new StringBuilder();
+
+            //result.AppendLine();
+            result.AppendLine($"{Indent(1)}#region {regionName}");
+
+            return result.ToString();
+        }
+
+        public override string RegionEnd()
+        {
+            var result = new StringBuilder();
+
+            result.AppendLine($"{Indent(1)}#endregion");
+            result.AppendLine();
+
+            return result.ToString();
+        }
+
         public override string StartClassDefinition()
         {
             var result = new StringBuilder();

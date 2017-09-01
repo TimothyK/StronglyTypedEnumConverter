@@ -33,12 +33,25 @@ namespace StronglyTypedEnumConverter
 
             result.AppendLine(gen.StartClassDefinition());
             result.AppendLine(gen.PrivateConstructor());
+
+            result.AppendLine(gen.RegionStart("Members"));
             result.AppendLine(gen.StaticMembers());
+            result.AppendLine(gen.RegionEnd());
+
+            result.AppendLine(gen.RegionStart("All"));
             result.AppendLine(gen.AllMethod());
+            result.AppendLine(gen.RegionEnd());
+
+            result.AppendLine(gen.RegionStart("To/From String"));
             result.AppendLine(gen.ToStringMethod());
             result.AppendLine(gen.FromStringMethod());
+            result.AppendLine(gen.RegionEnd());
+
+            result.AppendLine(gen.RegionStart("Cast to/from Underlying Type"));
             result.AppendLine(gen.CastToUnderlyingOperator());
             result.AppendLine(gen.CastFromUnderlyingOperator());
+            result.AppendLine(gen.RegionEnd());
+
             result.AppendLine(gen.EndClassDefinition());
 
             return result.ToString();

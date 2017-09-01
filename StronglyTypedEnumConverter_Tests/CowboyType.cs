@@ -2,10 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace StronglyTypedEnumConverter
 {
-    class CowboyType
+    internal class CowboyType
     {
         private CowboyType() 
         {
@@ -17,9 +18,17 @@ namespace StronglyTypedEnumConverter
 
         public static IEnumerable<CowboyType> All()
         {
-            yield return Good;
-            yield return Bad;
-            yield return Ugly;
+            return All<CowboyType>();
+        }
+
+        private static IEnumerable<T> All<T>()
+        {
+            var type = typeof(T);
+            return type.GetFields(BindingFlags.Public | BindingFlags.Static)
+                .Where(f => f.IsInitOnly)
+                .Where(f => f.FieldType == type)
+                .Select(f => f.GetValue(null))
+                .Cast<T>();
         }
 
         private static readonly Dictionary<CowboyType, string> ToStringMap = new Dictionary<CowboyType, string>

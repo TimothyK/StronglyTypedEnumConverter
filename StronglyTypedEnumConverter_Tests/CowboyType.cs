@@ -25,9 +25,9 @@ namespace StronglyTypedEnumConverter
         {
             var type = typeof(T);
             return type.GetFields(BindingFlags.Public | BindingFlags.Static)
-                .Where(f => f.IsInitOnly)
-                .Where(f => f.FieldType == type)
-                .Select(f => f.GetValue(null))
+                .Where(field => field.IsInitOnly)
+                .Where(field => field.FieldType == type)
+                .Select(field => field.GetValue(null))
                 .Cast<T>();
         }
 

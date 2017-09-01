@@ -59,9 +59,19 @@ namespace StronglyTypedEnumConverter
             var result = new StringBuilder();
 
             result.AppendLine($"{Indent(1)}public static IEnumerable<{TypeName}> All()");
+            result.AppendLine($"{Indent(1)}{{");            
+            result.AppendLine($"{Indent(2)}return All<{TypeName}>();");
+            result.AppendLine($"{Indent(1)}}}");
+
+            result.AppendLine();
+            result.AppendLine($"{Indent(1)}private static IEnumerable<T> All<T>()");
             result.AppendLine($"{Indent(1)}{{");
-            foreach (var memberName in MemberNames)
-                result.AppendLine($"{Indent(2)}yield return {memberName};");
+            result.AppendLine($"{Indent(2)}var type = typeof(T);");
+            result.AppendLine($"{Indent(2)}return type.GetFields(BindingFlags.Public | BindingFlags.Static)");
+            result.AppendLine($"{Indent(3)}.Where(field => field.IsInitOnly)");
+            result.AppendLine($"{Indent(3)}.Where(field => field.FieldType == type)");
+            result.AppendLine($"{Indent(3)}.Select(field => field.GetValue(null))");
+            result.AppendLine($"{Indent(3)}.Cast<T>();");
             result.AppendLine($"{Indent(1)}}}");
 
             return result.ToString();

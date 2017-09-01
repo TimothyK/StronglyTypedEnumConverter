@@ -28,6 +28,7 @@ namespace StronglyTypedEnumConverter
             result.AppendLine(gen.UsingStatement("System"));
             result.AppendLine(gen.UsingStatement("System.Collections.Generic"));
             result.AppendLine(gen.UsingStatement("System.Linq"));
+            result.AppendLine(gen.UsingStatement("System.Reflection"));
             result.AppendLine();
 
             result.AppendLine(gen.StartClassDefinition());

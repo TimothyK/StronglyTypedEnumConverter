@@ -9,14 +9,16 @@
                  FontFamily="Courier New" 
                  GotFocus="txtInput_OnGotFocus"
                  />
-        <TextBox x:Name="txtOutput" Margin="10,160,10,10" 
+        <TextBox x:Name="txtOutput" Margin="10,211,10,10" 
                  TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True" 
                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
                  FontFamily="Courier New"/>
-        <Button x:Name="btnConvert" Content="Convert" HorizontalAlignment="Left" Margin="77,133,0,0" VerticalAlignment="Top" Width="75"
+        <Button x:Name="btnConvert" Content="Convert" HorizontalAlignment="Left" Margin="64,186,0,0" VerticalAlignment="Top" Width="75"
                 Click="btnConvert_OnClick"
                 />
-        <Button Content="Paste, Convert &amp; Copy" HorizontalAlignment="Left" Margin="256,133,0,0" VerticalAlignment="Top" Width="161" Click="btnConvertClipboard_Click"/>
+        <Button Content="Paste, Convert &amp; Copy" HorizontalAlignment="Left" Margin="257,186,0,0" VerticalAlignment="Top" Width="161" Click="btnConvertClipboard_Click"/>
+        <RadioButton x:Name="MemberAddition" Content="Optimize for member addition" HorizontalAlignment="Left" Margin="23,136,0,0" VerticalAlignment="Top" IsChecked="True"/>
+        <RadioButton x:Name="PropertyAddition" Content="Optimize for property addition" HorizontalAlignment="Left" Margin="23,156,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

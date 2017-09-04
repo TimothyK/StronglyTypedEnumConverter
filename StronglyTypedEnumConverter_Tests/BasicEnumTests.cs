@@ -4,33 +4,32 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace StronglyTypedEnumConverter
 {
     [TestClass]
-    public class BasicEnumTests
+    public abstract class BasicEnumTests
     {
         private static Type _type;
 
-        [ClassInitialize]
-        public static void ClassInit(TestContext context)
+        protected static void ClassInit(Action<GeneratorOptions> adjustOptions)
         {
-            _type = CompiledStrongTypeFromEnumSourceCode("enum CowboyType {Good,Bad,Ugly};");
+            _type = CompiledStrongTypeFromEnumSourceCode(adjustOptions);
             EnumMembers = _type.GetEnumMembers();
             EnumValues = _type.GetEnumMemberValues();
         }
 
-        
+        private const string SourceCode = "enum CowboyType {Good,Bad,Ugly};";
+
         /// <summary>
         /// Compiles enum source code to an in-memory strongly typed Type
         /// </summary>
-        /// <param name="enumSourceCode"></param>
+        /// <param name="adjustOptions"></param>
         /// <returns></returns>
-        private static Type CompiledStrongTypeFromEnumSourceCode(string enumSourceCode)
+        private static Type CompiledStrongTypeFromEnumSourceCode(Action<GeneratorOptions> adjustOptions)
         {
             var converter = new Converter();
-            var stronglyTypedSourceCode = converter.Convert(enumSourceCode);
+            var stronglyTypedSourceCode = converter.Convert(SourceCode, adjustOptions);
             Console.WriteLine(stronglyTypedSourceCode);
 
             var compiler = new Compiler();

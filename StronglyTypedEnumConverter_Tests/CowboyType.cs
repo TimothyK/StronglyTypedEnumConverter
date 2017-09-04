@@ -6,13 +6,17 @@ using System.Reflection;
 class CowboyType
 {
 
-    private CowboyType() { }
+    private CowboyType(string name, int value)
+    {
+        _name = name;
+        _value = value;
+    }
 
     #region Members
 
-    public static readonly CowboyType Good = new CowboyType();
-    public static readonly CowboyType Bad = new CowboyType();
-    public static readonly CowboyType Ugly = new CowboyType();
+    public static readonly CowboyType Good = new CowboyType("Good", 0);
+    public static readonly CowboyType Bad = new CowboyType("Bad", 1);
+    public static readonly CowboyType Ugly = new CowboyType("Ugly", 2);
 
     #endregion
 
@@ -39,16 +43,11 @@ class CowboyType
 
     #region To/From String
 
-    private static readonly Dictionary<CowboyType, string> ToStringMap = new Dictionary<CowboyType, string>
-    {
-        {Good, "Good"},
-        {Bad, "Bad"},
-        {Ugly, "Ugly"}
-    };
+    private readonly string _name;
 
     public override string ToString()
     {
-        return ToStringMap[this];
+        return _name;
     }
 
     public static CowboyType FromString(string value)
@@ -66,16 +65,10 @@ class CowboyType
 
     #region Cast to/from Underlying Type
 
-    private static readonly Dictionary<CowboyType, int> UnderlyingMap = new Dictionary<CowboyType, int>
-    {
-        {Good, 0},
-        {Bad, 1},
-        {Ugly, 2}
-    };
-
+    private readonly int _value;
     public static explicit operator int(CowboyType value)
     {
-        return UnderlyingMap[value];
+        return value._value;
     }
 
     public static explicit operator CowboyType(int value)

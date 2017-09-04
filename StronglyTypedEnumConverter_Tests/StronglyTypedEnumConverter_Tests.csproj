@@ -62,7 +62,9 @@
     <Compile Include="CowboyType.cs" />
     <Compile Include="CowboyTypeTests.cs" />
     <Compile Include="InitializationTests.cs" />
+    <Compile Include="MemberEnumTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyEnumTests.cs" />
     <Compile Include="ReflectionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

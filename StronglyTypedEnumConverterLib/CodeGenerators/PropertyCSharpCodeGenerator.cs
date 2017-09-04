@@ -1,10 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace StronglyTypedEnumConverter
 {
+
+    /// <summary>
+    /// Generates the strongly typed name with priority to property addition
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// To add a new property with this generated code should be easy.  
+    /// Just add the property.  Create a static dictionary so to define the property value for each of the existing members.
+    /// </para>
+    /// <para>
+    /// Conversly, adding a new member to this strongly typed enum class would be more difficult.
+    /// You would have to the mapping dictionary for every property to ensure the new member has a property value defined.
+    /// That's in addition to adding the new member.
+    /// </para>
+    /// </remarks>
     internal class PropertyCSharpCodeGenerator : CSharpCodeGenerator
     {
         public PropertyCSharpCodeGenerator(Type enumType) : base(enumType)

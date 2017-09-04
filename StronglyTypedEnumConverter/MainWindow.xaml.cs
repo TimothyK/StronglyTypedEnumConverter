@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace StronglyTypedEnumConverter
 {
@@ -27,7 +26,7 @@ namespace StronglyTypedEnumConverter
         private static string DefaultInput()
         {
             var value = new StringBuilder();
-            value.AppendLine("//Enter your C# or VB simple enum here");
+            value.AppendLine("//Enter your C# simple enum here");
             value.AppendLine("enum CowboyType {");
             value.AppendLine("    Good,");
             value.AppendLine("    Bad,");

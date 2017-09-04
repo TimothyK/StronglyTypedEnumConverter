@@ -14,7 +14,7 @@ namespace StronglyTypedEnumConverter
     {
         public string Convert(string clrEnumDef)
         {
-            var factory = LanguageAbstractFactory.Create(clrEnumDef);
+            var factory = LanguageAbstractFactory.Create();
 
             var enumAssembly = CompileCode(clrEnumDef, factory.CodeProvider());
             var enumType = enumAssembly

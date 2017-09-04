@@ -5,7 +5,7 @@ namespace StronglyTypedEnumConverter.CodeGenerators
 {
     internal abstract class LanguageAbstractFactory
     {
-        public static LanguageAbstractFactory Create(string sourceCode)
+        public static LanguageAbstractFactory Create()
         {
             return new CSharpAbstractFactory();
         }

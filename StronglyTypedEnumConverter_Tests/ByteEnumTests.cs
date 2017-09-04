@@ -30,7 +30,8 @@ namespace StronglyTypedEnumConverter
         private static Type CompiledStrongTypeFromEnumSourceCode(string enumSourceCode)
         {
             var converter = new Converter();
-            var stronglyTypedSourceCode = converter.Convert(enumSourceCode);
+            var options = new GeneratorOptions();
+            var stronglyTypedSourceCode = converter.Convert(enumSourceCode, options);
             Console.WriteLine(stronglyTypedSourceCode);
 
             var compiler = new Compiler();

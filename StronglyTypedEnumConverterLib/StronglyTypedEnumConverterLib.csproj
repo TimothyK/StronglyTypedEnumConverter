@@ -39,8 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeGenerators\PropertyCSharpCodeGenerator.cs" />
+    <Compile Include="CodeGenerators\MemberCSharpCodeGenerator.cs" />
     <Compile Include="CodeGenerators\CodeGenerator.cs" />
     <Compile Include="CodeGenerators\CSharpCodeGenerator.cs" />
+    <Compile Include="CodeGenerators\GeneratorOptions.cs" />
     <Compile Include="CodeGenerators\LanguageAbstractFactory.cs" />
     <Compile Include="Converter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

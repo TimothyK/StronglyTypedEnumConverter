@@ -12,9 +12,24 @@ namespace StronglyTypedEnumConverter
 {
     public class Converter
     {
+
         public string Convert(string clrEnumDef)
         {
-            var factory = LanguageAbstractFactory.Create();
+            var options = new GeneratorOptions();
+            return Convert(clrEnumDef, options);
+        }
+
+        public string Convert(string clrEnumDef, Action<GeneratorOptions> adjustOptions)
+        {
+            var options = new GeneratorOptions();
+            adjustOptions?.Invoke(options);
+            return Convert(clrEnumDef, options);
+        }
+
+
+        public string Convert(string clrEnumDef, GeneratorOptions options)
+        {
+            var factory = LanguageAbstractFactory.Create(options);
 
             var enumAssembly = CompileCode(clrEnumDef, factory.CodeProvider());
             var enumType = enumAssembly

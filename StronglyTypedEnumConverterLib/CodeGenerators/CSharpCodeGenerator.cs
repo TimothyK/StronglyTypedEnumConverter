@@ -5,7 +5,7 @@ using System.Text;
 
 namespace StronglyTypedEnumConverter
 {
-    internal class CSharpCodeGenerator : CodeGenerator
+    internal abstract class CSharpCodeGenerator : CodeGenerator
     {
         public CSharpCodeGenerator(Type enumType) : base(enumType)
         {

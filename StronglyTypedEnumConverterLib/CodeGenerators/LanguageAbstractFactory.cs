@@ -5,9 +5,9 @@ namespace StronglyTypedEnumConverter.CodeGenerators
 {
     internal abstract class LanguageAbstractFactory
     {
-        public static LanguageAbstractFactory Create()
-        {
-            return new CSharpAbstractFactory();
+        public static LanguageAbstractFactory Create(GeneratorOptions options)
+        {               
+            return new CSharpAbstractFactory(options);
         }
         
         public abstract CodeGenerator CodeGenerator(Type enumType);
@@ -16,9 +16,18 @@ namespace StronglyTypedEnumConverter.CodeGenerators
 
     class CSharpAbstractFactory : LanguageAbstractFactory
     {
+        private readonly GeneratorOptions _options;
+
+        public CSharpAbstractFactory(GeneratorOptions options)
+        {
+            _options = options;
+        }
+
         public override CodeGenerator CodeGenerator(Type enumType)
         {
-            return new CSharpCodeGenerator(enumType);
+            return _options.AdditionPriority == AdditionPriority.Members
+                ? (CodeGenerator) new MemberCSharpCodeGenerator(enumType)
+                : new PropertyCSharpCodeGenerator(enumType);
         }
 
         public override CodeDomProvider CodeProvider()

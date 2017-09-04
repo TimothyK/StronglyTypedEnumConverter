@@ -52,7 +52,8 @@ namespace StronglyTypedEnumConverter
             var converter = new Converter();
             try
             {
-                txtOutput.Text = converter.Convert(txtInput.Text);                
+                var options = new GeneratorOptions {AdditionPriority = AdditionPriority};
+                txtOutput.Text = converter.Convert(txtInput.Text, options);                
             }
             catch (Exception ex)
             {
@@ -63,11 +64,18 @@ namespace StronglyTypedEnumConverter
             return true;
         }
 
+        private AdditionPriority AdditionPriority => 
+            (MemberAddition.IsChecked ?? false) 
+            ? AdditionPriority.Members 
+            : AdditionPriority.Properties;
+
         private void btnConvertClipboard_Click(object sender, RoutedEventArgs e)
         {
             txtInput.Text = Clipboard.GetText();
             if (Convert())
                 Clipboard.SetText(txtOutput.Text);
         }
+
+
     }
 }

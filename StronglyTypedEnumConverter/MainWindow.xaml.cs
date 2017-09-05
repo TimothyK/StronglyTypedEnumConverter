@@ -17,6 +17,8 @@ namespace StronglyTypedEnumConverter
             btnConvert.Focus();
         }
 
+        private new MainWindowDataContext DataContext => (MainWindowDataContext) base.DataContext; 
+
         private void SetDefaultInput()
         {
             var value = DefaultInput();
@@ -52,7 +54,11 @@ namespace StronglyTypedEnumConverter
             var converter = new Converter();
             try
             {
-                var options = new GeneratorOptions {AdditionPriority = AdditionPriority};
+                var options = new GeneratorOptions
+                {
+                    AdditionPriority = AdditionPriority,
+                    LanguageVersion = DataContext.CurrentLanguageVersion
+                };
                 txtOutput.Text = converter.Convert(txtInput.Text, options);                
             }
             catch (Exception ex)

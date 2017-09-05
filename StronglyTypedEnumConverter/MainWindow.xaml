@@ -1,7 +1,11 @@
-﻿<Window x:Class="StronglyTypedEnumConverter.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:StronglyTypedEnumConverter" x:Class="StronglyTypedEnumConverter.MainWindow"
         Title="Strongly Typed Enum Converter" Height="350" Width="525" Icon="Barbell.ico">
+    <Window.DataContext>
+        <local:MainWindowDataContext/>
+    </Window.DataContext>
     <Grid>
         <TextBox x:Name="txtInput" Height="118" Margin="10,10,10,0" VerticalAlignment="Top" 
                  TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True"
@@ -20,7 +24,10 @@
         <RadioButton x:Name="MemberAddition" Content="Optimize for member addition" HorizontalAlignment="Left" Margin="23,136,0,0" VerticalAlignment="Top" IsChecked="True"/>
         <RadioButton x:Name="PropertyAddition" Content="Optimize for property addition" HorizontalAlignment="Left" Margin="23,156,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblLanguageVersion" Content="Language Version:" Margin="275,142,135,0" VerticalAlignment="Top" Height="29"/>
-        <ComboBox x:Name="cboLanguageVersion" Margin="387,143,10,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="cboLanguageVersion" Margin="387,143,10,0" VerticalAlignment="Top" 
+                  ItemsSource="{Binding LanguageVersions}" 
+                  SelectedItem="{Binding CurrentLanguageVersion, Mode=TwoWay}"
+                  />
 
     </Grid>
 </Window>

@@ -21,7 +21,6 @@ namespace StronglyTypedEnumConverter
         {
             var result = new StringBuilder();
 
-            //result.AppendLine();
             result.AppendLine($"{Indent(1)}#region {regionName}");
 
             return result.ToString();
@@ -41,7 +40,7 @@ namespace StronglyTypedEnumConverter
         {
             var result = new StringBuilder();
 
-            result.AppendLine($"class {TypeName}");
+            result.AppendLine($"internal class {TypeName}");
             result.AppendLine("{");
 
             return result.ToString();

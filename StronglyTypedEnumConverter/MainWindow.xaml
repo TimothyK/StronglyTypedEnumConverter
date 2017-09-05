@@ -19,6 +19,8 @@
         <Button Content="Paste, Convert &amp; Copy" HorizontalAlignment="Left" Margin="257,186,0,0" VerticalAlignment="Top" Width="161" Click="btnConvertClipboard_Click"/>
         <RadioButton x:Name="MemberAddition" Content="Optimize for member addition" HorizontalAlignment="Left" Margin="23,136,0,0" VerticalAlignment="Top" IsChecked="True"/>
         <RadioButton x:Name="PropertyAddition" Content="Optimize for property addition" HorizontalAlignment="Left" Margin="23,156,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblLanguageVersion" Content="Language Version:" Margin="275,142,135,0" VerticalAlignment="Top" Height="29"/>
+        <ComboBox x:Name="cboLanguageVersion" Margin="387,143,10,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

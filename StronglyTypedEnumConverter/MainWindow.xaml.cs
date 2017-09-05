@@ -40,6 +40,7 @@ namespace StronglyTypedEnumConverter
             if (txtInput.Text == DefaultInput())
                 txtInput.Text = string.Empty;
         }
+        
 
         private void btnConvert_OnClick(object sender, RoutedEventArgs e)
         {

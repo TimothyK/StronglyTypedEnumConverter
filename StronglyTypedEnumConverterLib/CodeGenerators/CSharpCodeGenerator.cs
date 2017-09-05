@@ -20,7 +20,7 @@ namespace StronglyTypedEnumConverter
         {
             var result = new StringBuilder();
 
-            result.AppendLine("class " + TypeName);
+            result.AppendLine("internal class " + TypeName);
             result.AppendLine("{");
 
             return result.ToString();

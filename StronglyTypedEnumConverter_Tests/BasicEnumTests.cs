@@ -57,6 +57,12 @@ namespace StronglyTypedEnumConverter
         }
 
         [TestMethod]
+        public void Class_IsInternal()
+        {
+            Assert.IsFalse(_type.IsPublic);
+        }
+
+        [TestMethod]
         public void Class_HasPrivateConstructor()
         {
             _type

@@ -10,7 +10,7 @@ namespace StronglyTypedEnumConverter.CodeGenerators
             return new CSharpAbstractFactory(options);
         }
         
-        public abstract CodeGenerator CodeGenerator(Type enumType);
+        public abstract CodeGenerator CodeGenerator(Type enumType, LanguageVersion version);
         public abstract CodeDomProvider CodeProvider();
     }
 
@@ -23,11 +23,11 @@ namespace StronglyTypedEnumConverter.CodeGenerators
             _options = options;
         }
 
-        public override CodeGenerator CodeGenerator(Type enumType)
+        public override CodeGenerator CodeGenerator(Type enumType, LanguageVersion version)
         {
             return _options.AdditionPriority == AdditionPriority.Members
-                ? (CodeGenerator) new MemberCSharpCodeGenerator(enumType)
-                : new PropertyCSharpCodeGenerator(enumType);
+                ? (CodeGenerator) new MemberCSharpCodeGenerator(enumType, version)
+                : new PropertyCSharpCodeGenerator(enumType, version);
         }
 
         public override CodeDomProvider CodeProvider()

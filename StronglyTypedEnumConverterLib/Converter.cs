@@ -36,7 +36,7 @@ namespace StronglyTypedEnumConverter
                 .GetTypes()
                 .Single(t => t.IsEnum);
 
-            var gen = factory.CodeGenerator(enumType);
+            var gen = factory.CodeGenerator(enumType, options.LanguageVersion);
 
             var result = new StringBuilder();
 

@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace StronglyTypedEnumConverter
 {
     internal abstract class CSharpCodeGenerator : CodeGenerator
     {
-        public CSharpCodeGenerator(Type enumType) : base(enumType)
-        {
-        }
+        private readonly LanguageVersion _version;
 
+        protected CSharpCodeGenerator(Type enumType, LanguageVersion version) : base(enumType)
+        {
+            _version = version;
+        }
 
         protected static string Indent(int count)
         {
@@ -19,11 +20,10 @@ namespace StronglyTypedEnumConverter
 
         protected string NameOf(string value)
         {
-            //C# 6.0
-            return $"nameof({value})";
+            if (_version >= LanguageVersion.CSharp60)
+                return $"nameof({value})";
 
-            //C# 5.0
-            //return $"\"{value}\"";
+            return $"\"{value}\"";
         }
 
         public override string UsingStatement(string nameSpace)

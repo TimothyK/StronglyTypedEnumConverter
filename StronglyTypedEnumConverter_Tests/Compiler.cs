@@ -13,8 +13,9 @@ namespace StronglyTypedEnumConverter
         /// Compiles the source code into an in-memory Assembly
         /// </summary>
         /// <param name="sourceCode"></param>
+        /// <param name="version"></param>
         /// <returns></returns>
-        public Assembly Compile(string sourceCode)
+        public Assembly Compile(string sourceCode, LanguageVersion version)
         {
 
             var assemblyName = Path.GetRandomFileName();
@@ -24,7 +25,7 @@ namespace StronglyTypedEnumConverter
                 MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location),
             };
 
-            var options = new CSharpParseOptions(Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp7_1);
+            var options = new CSharpParseOptions(RoslynVersion(version));
             var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode,options);
             var compilation = CSharpCompilation.Create(
                 assemblyName,
@@ -53,6 +54,18 @@ namespace StronglyTypedEnumConverter
                 }
                 throw new ApplicationException("Could Not Compile Code");
             }
+        }
+
+        private static Microsoft.CodeAnalysis.CSharp.LanguageVersion RoslynVersion(LanguageVersion version)
+        {
+            if (version == LanguageVersion.CSharp50)
+                return Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp5;
+            if (version == LanguageVersion.CSharp60)
+                return Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp6;
+            if (version == LanguageVersion.CSharp70)
+                return Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp7;
+            
+            return Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp7_1;
         }
     }
 }

@@ -21,7 +21,7 @@ namespace StronglyTypedEnumConverter
     /// </remarks>
     internal class MemberCSharpCodeGenerator : CSharpCodeGenerator
     {
-        public MemberCSharpCodeGenerator(Type enumType) : base(enumType)
+        public MemberCSharpCodeGenerator(Type enumType, LanguageVersion version) : base(enumType, version)
         {
 
         }

@@ -12,9 +12,9 @@ namespace StronglyTypedEnumConverter
     {
         private static Type _type;
 
-        protected static void ClassInit(Action<GeneratorOptions> adjustOptions)
+        protected static void ClassInit(GeneratorOptions options)
         {
-            _type = CompiledStrongTypeFromEnumSourceCode(adjustOptions);
+            _type = CompiledStrongTypeFromEnumSourceCode(options);
             EnumMembers = _type.GetEnumMembers();
             EnumValues = _type.GetEnumMemberValues();
         }
@@ -24,16 +24,16 @@ namespace StronglyTypedEnumConverter
         /// <summary>
         /// Compiles enum source code to an in-memory strongly typed Type
         /// </summary>
-        /// <param name="adjustOptions"></param>
+        /// <param name="options"></param>
         /// <returns></returns>
-        private static Type CompiledStrongTypeFromEnumSourceCode(Action<GeneratorOptions> adjustOptions)
+        private static Type CompiledStrongTypeFromEnumSourceCode(GeneratorOptions options)
         {
             var converter = new Converter();
-            var stronglyTypedSourceCode = converter.Convert(SourceCode, adjustOptions);
+            var stronglyTypedSourceCode = converter.Convert(SourceCode, options);
             Console.WriteLine(stronglyTypedSourceCode);
 
             var compiler = new Compiler();
-            var assembly = compiler.Compile(stronglyTypedSourceCode);
+            var assembly = compiler.Compile(stronglyTypedSourceCode, options.LanguageVersion);
 
             var type = assembly.GetTypes().SingleOrDefault(t => !t.IsAnonymous());
             return type;

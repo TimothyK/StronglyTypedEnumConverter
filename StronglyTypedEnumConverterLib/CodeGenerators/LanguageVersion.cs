@@ -6,7 +6,7 @@ using System.Reflection;
 namespace StronglyTypedEnumConverter
 {
 
-    public class LanguageVersion
+    public class LanguageVersion : IComparable<LanguageVersion>
     {
         public int Major { get; }
         public int Minor { get; }
@@ -15,7 +15,6 @@ namespace StronglyTypedEnumConverter
         {
             Major = major;
             Minor = minor;
-            _value = major * 10 + minor;
         }
 
         #region Members
@@ -24,7 +23,7 @@ namespace StronglyTypedEnumConverter
         public static readonly LanguageVersion CSharp60 = new LanguageVersion(6, 0);
         public static readonly LanguageVersion CSharp70 = new LanguageVersion(7, 0);
         public static readonly LanguageVersion CSharp71 = new LanguageVersion(7, 1);
-        public static LanguageVersion Max => All().OrderBy(x => (int) x).Last();
+        public static LanguageVersion Max => All().OrderBy(x => x).Last();
 
         #endregion
 
@@ -65,33 +64,26 @@ namespace StronglyTypedEnumConverter
 
         #endregion
 
+        #region Comparison
 
-        #region Cast to/from Underlying Type
-
-        private readonly int _value;
-        public static explicit operator int(LanguageVersion value)
+        public int CompareTo(LanguageVersion other)
         {
-            return value._value;
+            var results = new[]
+            {
+                Major.CompareTo(other.Major),
+                Minor.CompareTo(other.Minor)
+            };
+            return results
+                .SkipWhile(diff => diff == 0)
+                .FirstOrDefault();
         }
 
-        public static explicit operator LanguageVersion(int value)
-        {
-            var result = All().FirstOrDefault(x => (int)x == value);
-            if (result != null) return result;
+        public static bool operator <(LanguageVersion lhs, LanguageVersion rhs) => lhs.CompareTo(rhs) < 0;
 
-            throw new InvalidCastException("The value " + value + " is not a valid LanguageVersion");
-        }
+        public static bool operator >(LanguageVersion lhs, LanguageVersion rhs) => lhs.CompareTo(rhs) > 0;
 
-        #endregion
-
-        #region Ordinal Operators
-
-        public static bool operator <(LanguageVersion lhs, LanguageVersion rhs) => (int) lhs < (int) rhs;
-
-        public static bool operator >(LanguageVersion lhs, LanguageVersion rhs) => (int) lhs > (int) rhs;
-
-        public static bool operator <=(LanguageVersion lhs, LanguageVersion rhs) => (int) lhs <= (int) rhs;
-        public static bool operator >=(LanguageVersion lhs, LanguageVersion rhs) => (int) lhs >= (int) rhs;
+        public static bool operator <=(LanguageVersion lhs, LanguageVersion rhs) => lhs.CompareTo(rhs) <= 0;
+        public static bool operator >=(LanguageVersion lhs, LanguageVersion rhs) => lhs.CompareTo(rhs) >= 0;
 
         #endregion
 

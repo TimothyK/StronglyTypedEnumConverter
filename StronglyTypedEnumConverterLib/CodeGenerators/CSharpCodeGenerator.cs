@@ -20,10 +20,10 @@ namespace StronglyTypedEnumConverter
         protected string NameOf(string value)
         {
             //C# 6.0
-            //return "nameof(" + value + ")";
+            return $"nameof({value})";
 
             //C# 5.0
-            return $"\"{value}\"";
+            //return $"\"{value}\"";
         }
 
         public override string UsingStatement(string nameSpace)

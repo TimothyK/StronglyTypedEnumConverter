@@ -24,7 +24,8 @@ namespace StronglyTypedEnumConverter
                 MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location),
             };
 
-            var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
+            var options = new CSharpParseOptions(Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp7_1);
+            var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode,options);
             var compilation = CSharpCompilation.Create(
                 assemblyName,
                 new[] { syntaxTree },

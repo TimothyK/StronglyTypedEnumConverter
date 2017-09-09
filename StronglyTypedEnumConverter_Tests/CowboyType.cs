@@ -23,10 +23,7 @@ class CowboyType
 
     #region All
 
-    public static IEnumerable<CowboyType> All()
-    {
-        return All<CowboyType>();
-    }
+    public static IEnumerable<CowboyType> All() => All<CowboyType>();
 
     private static IEnumerable<T> All<T>()
     {
@@ -45,10 +42,7 @@ class CowboyType
 
     private readonly string _name;
 
-    public override string ToString()
-    {
-        return _name;
-    }
+    public override string ToString() => _name;
 
     public static CowboyType FromString(string value)
     {
@@ -66,10 +60,7 @@ class CowboyType
     #region Cast to/from Underlying Type
 
     private readonly int _value;
-    public static explicit operator int(CowboyType value)
-    {
-        return value._value;
-    }
+    public static explicit operator int(CowboyType value) => value._value;
 
     public static explicit operator CowboyType(int value)
     {

@@ -14,9 +14,9 @@ class CowboyType
 
     #region Members
 
-    public static readonly CowboyType Good = new CowboyType("Good", 0);
-    public static readonly CowboyType Bad = new CowboyType("Bad", 1);
-    public static readonly CowboyType Ugly = new CowboyType("Ugly", 2);
+    public static readonly CowboyType Good = new CowboyType(nameof(Good), 0);
+    public static readonly CowboyType Bad = new CowboyType(nameof(Bad), 1);
+    public static readonly CowboyType Ugly = new CowboyType(nameof(Ugly), 2);
 
     #endregion
 
@@ -52,12 +52,12 @@ class CowboyType
 
     public static CowboyType FromString(string value)
     {
-        if (value == null) throw new ArgumentNullException("value");
+        if (value == null) throw new ArgumentNullException(nameof(value));
 
         var result = All().FirstOrDefault(x => x.ToString() == value);
         if (result != null) return result;
 
-        throw new ArgumentOutOfRangeException("value", value, "Invalid CowboyType");
+        throw new ArgumentOutOfRangeException(nameof(value), value, "Invalid CowboyType");
     }
 
     #endregion

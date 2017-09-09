@@ -20,7 +20,7 @@ namespace StronglyTypedEnumConverter
 
         protected string NameOf(string value)
         {
-            if (_version >= LanguageVersion.CSharp60)
+            if (_version >= LanguageVersion.CSharp6)
                 return $"nameof({value})";
 
             return $"\"{value}\"";
@@ -28,7 +28,7 @@ namespace StronglyTypedEnumConverter
 
         protected string ExpressionBody(string returnValue)
         {
-            if (_version >= LanguageVersion.CSharp60)
+            if (_version >= LanguageVersion.CSharp6)
                 return $" => {returnValue};";
 
             var result = new StringBuilder();

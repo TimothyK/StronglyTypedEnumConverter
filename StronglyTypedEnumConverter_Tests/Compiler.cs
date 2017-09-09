@@ -58,14 +58,12 @@ namespace StronglyTypedEnumConverter
 
         private static Microsoft.CodeAnalysis.CSharp.LanguageVersion RoslynVersion(LanguageVersion version)
         {
-            if (version == LanguageVersion.CSharp50)
+            if (version == LanguageVersion.CSharp5)
                 return Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp5;
-            if (version == LanguageVersion.CSharp60)
+            if (version == LanguageVersion.CSharp6)
                 return Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp6;
-            if (version == LanguageVersion.CSharp70)
-                return Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp7;
             
-            return Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp7_1;
+            return Microsoft.CodeAnalysis.CSharp.LanguageVersion.Latest;
         }
     }
 }

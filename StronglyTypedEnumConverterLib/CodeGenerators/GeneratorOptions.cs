@@ -5,7 +5,7 @@ namespace StronglyTypedEnumConverter
     {
         public AdditionPriority AdditionPriority { get; set; } = AdditionPriority.Members;
 
-        public LanguageVersion LanguageVersion { get; set; } = LanguageVersion.CSharp70;
+        public LanguageVersion LanguageVersion { get; set; } = LanguageVersion.Max;
     }
 
     public enum AdditionPriority

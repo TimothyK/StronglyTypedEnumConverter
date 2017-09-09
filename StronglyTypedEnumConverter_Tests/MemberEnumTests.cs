@@ -12,7 +12,7 @@ namespace StronglyTypedEnumConverter
             var options = new GeneratorOptions
             {
                 AdditionPriority = AdditionPriority.Members,
-                LanguageVersion = LanguageVersion.CSharp50
+                LanguageVersion = LanguageVersion.CSharp5
             };
             BasicEnumTests.ClassInit(options);
         }
@@ -29,27 +29,11 @@ namespace StronglyTypedEnumConverter
             var options = new GeneratorOptions
             {
                 AdditionPriority = AdditionPriority.Members,
-                LanguageVersion = LanguageVersion.CSharp60
+                LanguageVersion = LanguageVersion.CSharp6
             };
             BasicEnumTests.ClassInit(options);
         }
 
     }
 
-    [TestClass]
-    public class MemberEnumTests7 : BasicEnumTests
-    {
-
-        [ClassInitialize]
-        public static void ClassInit(TestContext context)
-        {
-            var options = new GeneratorOptions
-            {
-                AdditionPriority = AdditionPriority.Members,
-                LanguageVersion = LanguageVersion.CSharp70
-            };
-            BasicEnumTests.ClassInit(options);
-        }
-
-    }
 }

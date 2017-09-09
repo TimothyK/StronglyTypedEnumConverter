@@ -19,10 +19,8 @@ namespace StronglyTypedEnumConverter
 
         #region Members
 
-        public static readonly LanguageVersion CSharp50 = new LanguageVersion(5, 0);
-        public static readonly LanguageVersion CSharp60 = new LanguageVersion(6, 0);
-        public static readonly LanguageVersion CSharp70 = new LanguageVersion(7, 0);
-        public static readonly LanguageVersion CSharp71 = new LanguageVersion(7, 1);
+        public static readonly LanguageVersion CSharp5 = new LanguageVersion(5, 0);
+        public static readonly LanguageVersion CSharp6 = new LanguageVersion(6, 0);
         public static LanguageVersion Max => All().OrderBy(x => x).Last();
 
         #endregion

@@ -62,10 +62,8 @@ namespace StronglyTypedEnumConverter
             result.AppendLine($"{Indent(1)}}};");
             result.AppendLine();
 
-            result.AppendLine($"{Indent(1)}public override string ToString()");
-            result.AppendLine($"{Indent(1)}{{");
-            result.AppendLine($"{Indent(2)}return ToStringMap[this];");
-            result.AppendLine($"{Indent(1)}}}");
+            result.Append($"{Indent(1)}public override string ToString()");
+            result.AppendLine(ExpressionBody("ToStringMap[this]"));
 
             return result.ToString();
         }
@@ -85,10 +83,8 @@ namespace StronglyTypedEnumConverter
             result.AppendLine($"{Indent(1)}}};");
             result.AppendLine();
 
-            result.AppendLine($"{Indent(1)}public static explicit operator {UnderlyingTypeName}({TypeName} value)");
-            result.AppendLine($"{Indent(1)}{{");
-            result.AppendLine($"{Indent(2)}return UnderlyingMap[value];");
-            result.AppendLine($"{Indent(1)}}}");
+            result.Append($"{Indent(1)}public static explicit operator {UnderlyingTypeName}({TypeName} value)");
+            result.AppendLine(ExpressionBody("UnderlyingMap[value]"));
 
             return result.ToString();
         }

@@ -26,6 +26,20 @@ namespace StronglyTypedEnumConverter
             return $"\"{value}\"";
         }
 
+        protected string ExpressionBody(string returnValue)
+        {
+            if (_version >= LanguageVersion.CSharp60)
+                return $" => {returnValue};";
+
+            var result = new StringBuilder();
+            result.AppendLine();
+            result.AppendLine($"{Indent(1)}{{");
+            result.AppendLine($"{Indent(2)}return {returnValue};");
+            result.Append($"{Indent(1)}}}");
+
+            return result.ToString();
+        }
+
         public override string UsingStatement(string nameSpace)
         {
             return $"using {nameSpace};";
@@ -65,10 +79,8 @@ namespace StronglyTypedEnumConverter
         {
             var result = new StringBuilder();
 
-            result.AppendLine($"{Indent(1)}public static IEnumerable<{TypeName}> All()");
-            result.AppendLine($"{Indent(1)}{{");            
-            result.AppendLine($"{Indent(2)}return All<{TypeName}>();");
-            result.AppendLine($"{Indent(1)}}}");
+            result.Append($"{Indent(1)}public static IEnumerable<{TypeName}> All()");
+            result.AppendLine(ExpressionBody($"All<{TypeName}>()"));
 
             result.AppendLine();
             result.AppendLine($"{Indent(1)}private static IEnumerable<T> All<T>()");

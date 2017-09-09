@@ -50,7 +50,7 @@ namespace StronglyTypedEnumConverter
 
                 foreach (var diagnostic in failures)
                 {
-                    Console.Error.WriteLine("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
+                    Console.WriteLine("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
                 }
                 throw new ApplicationException("Could Not Compile Code");
             }

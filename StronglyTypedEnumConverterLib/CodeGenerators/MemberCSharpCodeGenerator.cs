@@ -59,10 +59,8 @@ namespace StronglyTypedEnumConverter
 
             result.AppendLine($"{Indent(1)}private readonly string _name;");
 
-            result.AppendLine($"{Indent(1)}public override string ToString()");
-            result.AppendLine($"{Indent(1)}{{");
-            result.AppendLine($"{Indent(2)}return _name;");
-            result.AppendLine($"{Indent(1)}}}");
+            result.Append($"{Indent(1)}public override string ToString()");
+            result.AppendLine(ExpressionBody("_name"));
 
             return result.ToString();
         }
@@ -73,10 +71,8 @@ namespace StronglyTypedEnumConverter
 
             result.AppendLine($"{Indent(1)}private readonly {UnderlyingTypeName} _value;");
 
-            result.AppendLine($"{Indent(1)}public static explicit operator {UnderlyingTypeName}({TypeName} value)");
-            result.AppendLine($"{Indent(1)}{{");
-            result.AppendLine($"{Indent(2)}return value._value;");
-            result.AppendLine($"{Indent(1)}}}");
+            result.Append($"{Indent(1)}public static explicit operator {UnderlyingTypeName}({TypeName} value)");
+            result.AppendLine(ExpressionBody("value._value"));
 
             return result.ToString();
         }

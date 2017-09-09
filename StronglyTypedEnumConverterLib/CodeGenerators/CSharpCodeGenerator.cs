@@ -12,6 +12,20 @@ namespace StronglyTypedEnumConverter
         }
 
 
+        protected static string Indent(int count)
+        {
+            return new string(' ', count*4);
+        }
+
+        protected string NameOf(string value)
+        {
+            //C# 6.0
+            //return "nameof(" + value + ")";
+
+            //C# 5.0
+            return $"\"{value}\"";
+        }
+
         public override string UsingStatement(string nameSpace)
         {
             return $"using {nameSpace};";
@@ -46,11 +60,6 @@ namespace StronglyTypedEnumConverter
             return result.ToString();
         }
 
-        protected static string Indent(int count)
-        {
-            return new string(' ', count*4);
-        }
-
 
         public override string AllMethod()
         {
@@ -83,12 +92,12 @@ namespace StronglyTypedEnumConverter
 
             result.AppendLine($"{Indent(1)}public static {TypeName} FromString(string value)");
             result.AppendLine($"{Indent(1)}{{");
-            result.AppendLine($"{Indent(2)}if (value == null) throw new ArgumentNullException(\"value\");");
+            result.AppendLine($"{Indent(2)}if (value == null) throw new ArgumentNullException({NameOf("value")});");
             result.AppendLine();
             result.AppendLine($"{Indent(2)}var result = All().FirstOrDefault(x => x.ToString() == value);");
             result.AppendLine($"{Indent(2)}if (result != null) return result;");
             result.AppendLine();
-            result.AppendLine($"{Indent(2)}throw new ArgumentOutOfRangeException(\"value\", value, \"Invalid {TypeName}\");");
+            result.AppendLine($"{Indent(2)}throw new ArgumentOutOfRangeException({NameOf("value")}, value, \"Invalid {TypeName}\");");
             result.AppendLine($"{Indent(1)}}}");
 
             return result.ToString();

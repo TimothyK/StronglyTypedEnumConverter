@@ -47,7 +47,7 @@ namespace StronglyTypedEnumConverter
             {
                 var memberValue = Convert.ChangeType(member.GetValue(null), UnderlyingType);
                 result.Append($"{Indent(1)}public static readonly {TypeName} {member.Name}");
-                result.AppendLine($" = new {TypeName}(\"{member.Name}\", {memberValue});");
+                result.AppendLine($" = new {TypeName}({NameOf(member.Name)}, {memberValue});");
             }
 
             return result.ToString();

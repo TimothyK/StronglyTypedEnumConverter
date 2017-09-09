@@ -8,18 +8,23 @@ namespace StronglyTypedEnumConverter
 
     public class LanguageVersion
     {
+        public int Major { get; }
+        public int Minor { get; }
 
-        private LanguageVersion(string name, int value)
+        private LanguageVersion(int major, int minor)
         {
-            _name = name;
-            _value = value;
+            Major = major;
+            Minor = minor;
+            _value = major * 10 + minor;
         }
 
         #region Members
 
-        public static readonly LanguageVersion CSharp50 = new LanguageVersion("C# 5.0", 50);
-        public static readonly LanguageVersion CSharp60 = new LanguageVersion("C# 6.0", 60);
-        public static readonly LanguageVersion CSharp70 = new LanguageVersion("C# 7.0", 70);
+        public static readonly LanguageVersion CSharp50 = new LanguageVersion(5, 0);
+        public static readonly LanguageVersion CSharp60 = new LanguageVersion(6, 0);
+        public static readonly LanguageVersion CSharp70 = new LanguageVersion(7, 0);
+        public static readonly LanguageVersion CSharp71 = new LanguageVersion(7, 1);
+        public static LanguageVersion Max => All().OrderBy(x => (int) x).Last();
 
         #endregion
 
@@ -46,11 +51,7 @@ namespace StronglyTypedEnumConverter
 
         #region To/From String
 
-        private readonly string _name;
-        public override string ToString()
-        {
-            return _name;
-        }
+        public override string ToString() => $"C# {Major}.{Minor}";
 
         public static LanguageVersion FromString(string value)
         {

@@ -7,7 +7,7 @@ namespace StronglyTypedEnumConverter
     {
         public MainWindowDataContext()
         {
-            _currentLanguageVersion = LanguageVersion.All().OrderBy(x => (int) x).Last();
+            _currentLanguageVersion = LanguageVersion.Max;
         }
 
         public List<LanguageVersion> LanguageVersions => 

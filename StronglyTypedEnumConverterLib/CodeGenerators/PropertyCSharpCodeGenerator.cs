@@ -55,7 +55,7 @@ namespace StronglyTypedEnumConverter
                 .AppendLine($"{Indent(1)}private static readonly Dictionary<{TypeName}, string> ToStringMap = new Dictionary<{TypeName}, string>");
             result.AppendLine($"{Indent(1)}{{");
             var toStringMappings = MemberNames
-                .Select(memberName => $"{{{memberName}, \"{memberName}\"}}")
+                .Select(memberName => $"{{{memberName}, {NameOf(memberName)}}}")
                 .ToArray();
             result.Append(Indent(2));
             result.AppendLine(string.Join($",\r\n{Indent(2)}", toStringMappings));

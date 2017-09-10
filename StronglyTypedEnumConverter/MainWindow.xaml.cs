@@ -54,12 +54,7 @@ namespace StronglyTypedEnumConverter
             var converter = new Converter();
             try
             {
-                var options = new GeneratorOptions
-                {
-                    AdditionPriority = AdditionPriority,
-                    LanguageVersion = DataContext.CurrentLanguageVersion
-                };
-                txtOutput.Text = converter.Convert(txtInput.Text, options);                
+                txtOutput.Text = converter.Convert(txtInput.Text, DataContext.GeneratorOptions);                
             }
             catch (Exception ex)
             {
@@ -69,11 +64,6 @@ namespace StronglyTypedEnumConverter
 
             return true;
         }
-
-        private AdditionPriority AdditionPriority => 
-            (MemberAddition.IsChecked ?? false) 
-            ? AdditionPriority.Members 
-            : AdditionPriority.Properties;
 
         private void btnConvertClipboard_Click(object sender, RoutedEventArgs e)
         {

@@ -7,7 +7,8 @@ namespace StronglyTypedEnumConverter
     {
         public MainWindowDataContext()
         {
-            _currentLanguageVersion = LanguageVersion.Max;
+            AdditionPriority = AdditionPriority.Members;
+            CurrentLanguageVersion = LanguageVersion.Max;
         }
 
         public List<LanguageVersion> LanguageVersions => 
@@ -22,5 +23,13 @@ namespace StronglyTypedEnumConverter
             get => _currentLanguageVersion; 
             set => SetProperty(ref _currentLanguageVersion, value);
         }
+
+        public AdditionPriority AdditionPriority { get; set; }
+
+        public GeneratorOptions GeneratorOptions => new GeneratorOptions
+        {
+            AdditionPriority = AdditionPriority,
+            LanguageVersion = CurrentLanguageVersion
+        };
     }
 }

@@ -1,7 +1,9 @@
 ﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:StronglyTypedEnumConverter" x:Class="StronglyTypedEnumConverter.MainWindow"
+        xmlns:local="clr-namespace:StronglyTypedEnumConverter"
+        xmlns:stronglyTypedEnumConverter="clr-namespace:StronglyTypedEnumConverter;assembly=StronglyTypedEnumConverterLib"
+        x:Class="StronglyTypedEnumConverter.MainWindow"
         Title="Strongly Typed Enum Converter" Height="468.083" Width="713.592" Icon="Barbell.ico">
     <Grid>
         <Grid.RowDefinitions>
@@ -25,6 +27,9 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0">
+                <Grid.Resources>
+                    <local:EnumBooleanConverter x:Key="enumBooleanConverter" />
+                </Grid.Resources>
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
@@ -35,7 +40,7 @@
                              VerticalAlignment="Center"
                              Margin="10,10,10,10"
                              Content="Optimize for member addition" 
-                             IsChecked="True"
+                             IsChecked="{Binding Path=AdditionPriority, Converter={StaticResource enumBooleanConverter}, ConverterParameter={x:Static stronglyTypedEnumConverter:AdditionPriority.Members}}"
                              />
                 <RadioButton x:Name="PropertyAddition" 
                              Grid.Row="1" 
@@ -43,6 +48,7 @@
                              Margin="10,10,10,10"
                              VerticalAlignment="Center"
                              Content="Optimize for property addition"
+                             IsChecked="{Binding Path=AdditionPriority, Converter={StaticResource enumBooleanConverter}, ConverterParameter={x:Static stronglyTypedEnumConverter:AdditionPriority.Properties}}"
                              />
             </Grid>
 

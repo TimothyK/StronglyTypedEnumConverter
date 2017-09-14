@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-class CowboyType
+class CowboyType : IComparable<CowboyType>
 {
 
     private CowboyType(string name, int value)
@@ -69,6 +69,28 @@ class CowboyType
 
         throw new InvalidCastException("The value " + value + " is not a valid CowboyType");
     }
+
+    #endregion
+
+    #region IComparable
+
+    public int CompareTo(CowboyType other)
+    {
+        var results = new[]
+        {
+            ((int) this).CompareTo((int) other)
+        };
+        return results
+            .SkipWhile(diff => diff == 0)
+            .FirstOrDefault();
+    }
+
+    public static bool operator <(CowboyType lhs, CowboyType rhs) => lhs.CompareTo(rhs) < 0;
+
+    public static bool operator >(CowboyType lhs, CowboyType rhs) => lhs.CompareTo(rhs) > 0;
+
+    public static bool operator <=(CowboyType lhs, CowboyType rhs) => lhs.CompareTo(rhs) <= 0;
+    public static bool operator >=(CowboyType lhs, CowboyType rhs) => lhs.CompareTo(rhs) >= 0;
 
     #endregion
 

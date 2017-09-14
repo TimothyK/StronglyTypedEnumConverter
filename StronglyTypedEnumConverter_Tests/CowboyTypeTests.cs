@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
+using System;
+using System.Linq;
 
 namespace StronglyTypedEnumConverter
 {
@@ -88,6 +88,36 @@ namespace StronglyTypedEnumConverter
 
             Assert.Fail("Expected exception did not occur");
         }
+
+        [TestMethod]
+        public void CowboyType_Sort_ValuesAreSorted()
+        {
+            //Arrange
+            var unsorted = new[] {CowboyType.Bad, CowboyType.Ugly, CowboyType.Good};
+
+            //Act
+            var sorted = unsorted.OrderBy(x => x).ToArray();
+
+            //Assert
+            sorted[0].ShouldBe(CowboyType.Good);
+            sorted[1].ShouldBe(CowboyType.Bad);
+            sorted[2].ShouldBe(CowboyType.Ugly);
+        }
+
+        [TestMethod] public void CowboyType_GoodLessThanBad_True() => (CowboyType.Good < CowboyType.Bad).ShouldBeTrue();
+        [TestMethod] public void CowboyType_GoodLessThanOrEqualBad_True() => (CowboyType.Good <= CowboyType.Bad).ShouldBeTrue();
+        [TestMethod] public void CowboyType_GoodGreaterThanBad_False() => (CowboyType.Good > CowboyType.Bad).ShouldBeFalse();
+        [TestMethod] public void CowboyType_GoodGreaterThanOrEqualThanBad_False() => (CowboyType.Good >= CowboyType.Bad).ShouldBeFalse();
+
+
+        // ReSharper disable EqualExpressionComparison
+#pragma warning disable CS1718 // Comparison made to same variable
+        [TestMethod] public void CowboyType_GoodLessThanGood_False () => (CowboyType.Good < CowboyType.Good).ShouldBeFalse();
+        [TestMethod] public void CowboyType_GoodLessThanOrEqualGood_True() => (CowboyType.Good <= CowboyType.Good).ShouldBeTrue();
+        [TestMethod] public void CowboyType_GoodGreaterThanGood_False() => (CowboyType.Good > CowboyType.Good).ShouldBeFalse();
+        [TestMethod] public void CowboyType_GoodGreaterThanOrEqualThanGood_True() => (CowboyType.Good >= CowboyType.Good).ShouldBeTrue();
+#pragma warning restore CS1718 // Comparison made to same variable
+        // ReSharper restore EqualExpressionComparison
 
     }
 }

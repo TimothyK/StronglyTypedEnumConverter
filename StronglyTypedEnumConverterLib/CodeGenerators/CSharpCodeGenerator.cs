@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace StronglyTypedEnumConverter
 {
     internal abstract class CSharpCodeGenerator : CodeGenerator
     {
-        private readonly LanguageVersion _version;
+        private readonly GeneratorOptions _options;
 
-        protected CSharpCodeGenerator(Type enumType, LanguageVersion version) : base(enumType)
+        protected CSharpCodeGenerator(Type enumType, GeneratorOptions options) : base(enumType)
         {
-            _version = version;
+            _options = options;
         }
 
         protected static string Indent(int count)
@@ -20,7 +21,7 @@ namespace StronglyTypedEnumConverter
 
         protected string NameOf(string value)
         {
-            if (_version >= LanguageVersion.CSharp6)
+            if (_options.LanguageVersion >= LanguageVersion.CSharp6)
                 return $"nameof({value})";
 
             return $"\"{value}\"";
@@ -28,7 +29,7 @@ namespace StronglyTypedEnumConverter
 
         protected string ExpressionBody(string returnValue)
         {
-            if (_version >= LanguageVersion.CSharp6)
+            if (_options.LanguageVersion >= LanguageVersion.CSharp6)
                 return $" => {returnValue};";
 
             var result = new StringBuilder();
@@ -68,7 +69,14 @@ namespace StronglyTypedEnumConverter
         {
             var result = new StringBuilder();
 
-            result.AppendLine($"internal class {TypeName}");
+            var superClasses = new List<string>();
+            if (_options.ImplementComparable)
+                superClasses.Add($"IComparable<{TypeName}>");
+
+            result.Append($"internal class {TypeName}");
+            if (superClasses.Any())
+                result.Append(" : ").Append(string.Join(", ", superClasses));
+            result.AppendLine();
             result.AppendLine("{");
 
             return result.ToString();
@@ -160,7 +168,26 @@ namespace StronglyTypedEnumConverter
                 { typeof(char), "char" },
                 { typeof(string), "string" },
                 { typeof(void), "void" }
-            };   
+            };
+
+        public override string CompareTo()
+        {
+            var result = new StringBuilder();
+
+            result.AppendLine($"{Indent(1)}public int CompareTo({TypeName} other)");
+            result.AppendLine($"{Indent(1)}{{");
+            result.AppendLine($"{Indent(2)}var results = new[]");
+            result.AppendLine($"{Indent(2)}{{");
+            result.AppendLine($"{Indent(3)}(({UnderlyingTypeName}) this).CompareTo(({UnderlyingTypeName}) other)");
+            result.AppendLine($"{Indent(2)}}};");
+            result.AppendLine($"{Indent(2)}return results");
+            result.AppendLine($"{Indent(3)}.SkipWhile(diff => diff == 0)");
+            result.AppendLine($"{Indent(3)}.FirstOrDefault();");
+            result.AppendLine($"{Indent(1)}}}");
+
+            return result.ToString();
+
+        }
 
         public override string EndClassDefinition()
         {

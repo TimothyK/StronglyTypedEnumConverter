@@ -36,7 +36,7 @@ namespace StronglyTypedEnumConverter
                 .GetTypes()
                 .Single(t => t.IsEnum);
 
-            var gen = factory.CodeGenerator(enumType, options.LanguageVersion);
+            var gen = factory.CodeGenerator(enumType, options);
 
             var result = new StringBuilder();
 
@@ -46,6 +46,7 @@ namespace StronglyTypedEnumConverter
             result.AppendLine(gen.UsingStatement("System.Reflection"));
             result.AppendLine();
 
+            
             result.AppendLine(gen.StartClassDefinition());
             result.AppendLine(gen.PrivateConstructor());
 
@@ -66,6 +67,13 @@ namespace StronglyTypedEnumConverter
             result.AppendLine(gen.CastToUnderlyingOperator());
             result.AppendLine(gen.CastFromUnderlyingOperator());
             result.AppendLine(gen.RegionEnd());
+
+            if (options.ImplementComparable)
+            {
+                result.AppendLine(gen.RegionStart("IComparable"));
+                result.AppendLine(gen.CompareTo());
+                result.AppendLine(gen.RegionEnd());
+            }
 
             result.AppendLine(gen.EndClassDefinition());
 

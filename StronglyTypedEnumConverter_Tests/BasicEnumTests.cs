@@ -302,6 +302,31 @@ namespace StronglyTypedEnumConverter
             Assert.Fail("Expected exception did not occur");
         }
 
+        [TestMethod]
+        public void Comparable_Class_ImplementsInterface()
+        {
+            var interfaces = _type.GetInterfaces();
+            interfaces.Length.ShouldBe(1);
+
+            var type = interfaces[0];
+            type.IsGenericType.ShouldBeTrue();
+            type.GetGenericTypeDefinition().ShouldBe(typeof(IComparable<>));
+            type.GetGenericArguments()[0].ShouldBe(_type);
+        }
+
+
+        [TestMethod]
+        public void Comparable_Unsorted_Sorted()
+        {            
+            var good = EnumValues.Single(value => value.ToString() == "Good");
+            var bad = EnumValues.Single(value => value.ToString() == "Bad");
+
+            var compareToMethod = _type.GetMethods(BindingFlags.Instance | BindingFlags.Public)
+                .Single(f => f.Name == "CompareTo");
+
+            var actual = compareToMethod.Invoke( good, new[] { bad });
+            actual.ShouldBe(-1);
+        }
 
     }
 

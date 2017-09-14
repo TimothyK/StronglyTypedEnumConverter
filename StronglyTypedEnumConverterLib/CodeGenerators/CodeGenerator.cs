@@ -37,5 +37,6 @@ namespace StronglyTypedEnumConverter
         public abstract string CastToUnderlyingOperator();
         public abstract string CastFromUnderlyingOperator();
         public abstract string EndClassDefinition();
+        public abstract string CompareTo();
     }
 }

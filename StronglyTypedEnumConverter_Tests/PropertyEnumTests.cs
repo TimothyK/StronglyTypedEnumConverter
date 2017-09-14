@@ -12,7 +12,8 @@ namespace StronglyTypedEnumConverter
             var options = new GeneratorOptions
             {
                 AdditionPriority = AdditionPriority.Properties,
-                LanguageVersion = LanguageVersion.CSharp5
+                LanguageVersion = LanguageVersion.CSharp5,
+                ImplementComparable = true,
             };
             BasicEnumTests.ClassInit(options);
         }
@@ -28,7 +29,8 @@ namespace StronglyTypedEnumConverter
             var options = new GeneratorOptions
             {
                 AdditionPriority = AdditionPriority.Properties,
-                LanguageVersion = LanguageVersion.CSharp6
+                LanguageVersion = LanguageVersion.CSharp6,
+                ImplementComparable = true,
             };
             BasicEnumTests.ClassInit(options);
         }

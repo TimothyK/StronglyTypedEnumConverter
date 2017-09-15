@@ -72,6 +72,10 @@ namespace StronglyTypedEnumConverter
             {
                 result.AppendLine(gen.RegionStart("IComparable"));
                 result.AppendLine(gen.CompareTo());
+                result.AppendLine(gen.LessThan());
+                result.AppendLine(gen.LessThanOrEqual());
+                result.AppendLine(gen.GreaterThan());
+                result.AppendLine(gen.GreaterThanOrEqual());
                 result.AppendLine(gen.RegionEnd());
             }
 

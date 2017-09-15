@@ -328,6 +328,106 @@ namespace StronglyTypedEnumConverter
             actual.ShouldBe(-1);
         }
 
+        [TestMethod]
+        public void LessThan_AllValues_ReturnsCorrectly()
+        {
+            var opLessThanMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .SingleOrDefault(f => f.Name == "op_LessThan");
+
+            opLessThanMethod.ShouldNotBeNull();
+            
+            var good = EnumValues.Single(value => value.ToString() == "Good");
+            var bad = EnumValues.Single(value => value.ToString() == "Bad");
+            var ugly = EnumValues.Single(value => value.ToString() == "Ugly");
+
+            bool LessThan(object a, object b) => (bool) opLessThanMethod.Invoke(null, new[] {a, b});
+
+            LessThan(good, good).ShouldBeFalse();
+            LessThan(good, bad).ShouldBeTrue();
+            LessThan(good, ugly).ShouldBeTrue();
+            LessThan(bad, good).ShouldBeFalse();
+            LessThan(bad, bad).ShouldBeFalse();
+            LessThan(bad, ugly).ShouldBeTrue();
+            LessThan(ugly, good).ShouldBeFalse();
+            LessThan(ugly, bad).ShouldBeFalse();
+            LessThan(ugly, ugly).ShouldBeFalse();
+        }
+
+        [TestMethod]
+        public void LessThanOrEqual_AllValues_ReturnsCorrectly()
+        {
+            var opLessThanOrEqualMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .SingleOrDefault(f => f.Name == "op_LessThanOrEqual");
+
+            opLessThanOrEqualMethod.ShouldNotBeNull();
+            
+            var good = EnumValues.Single(value => value.ToString() == "Good");
+            var bad = EnumValues.Single(value => value.ToString() == "Bad");
+            var ugly = EnumValues.Single(value => value.ToString() == "Ugly");
+
+            bool LessThanOrEqual(object a, object b) => (bool) opLessThanOrEqualMethod.Invoke(null, new[] {a, b});
+
+            LessThanOrEqual(good, good).ShouldBeTrue();
+            LessThanOrEqual(good, bad).ShouldBeTrue();
+            LessThanOrEqual(good, ugly).ShouldBeTrue();
+            LessThanOrEqual(bad, good).ShouldBeFalse();
+            LessThanOrEqual(bad, bad).ShouldBeTrue();
+            LessThanOrEqual(bad, ugly).ShouldBeTrue();
+            LessThanOrEqual(ugly, good).ShouldBeFalse();
+            LessThanOrEqual(ugly, bad).ShouldBeFalse();
+            LessThanOrEqual(ugly, ugly).ShouldBeTrue();
+        }
+
+        [TestMethod]
+        public void GreaterThan_AllValues_ReturnsCorrectly()
+        {
+            var opGreaterThanMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .SingleOrDefault(f => f.Name == "op_GreaterThan");
+
+            opGreaterThanMethod.ShouldNotBeNull();
+            
+            var good = EnumValues.Single(value => value.ToString() == "Good");
+            var bad = EnumValues.Single(value => value.ToString() == "Bad");
+            var ugly = EnumValues.Single(value => value.ToString() == "Ugly");
+
+            bool GreaterThan(object a, object b) => (bool) opGreaterThanMethod.Invoke(null, new[] {a, b});
+
+            GreaterThan(good, good).ShouldBeFalse();
+            GreaterThan(good, bad).ShouldBeFalse();
+            GreaterThan(good, ugly).ShouldBeFalse();
+            GreaterThan(bad, good).ShouldBeTrue();
+            GreaterThan(bad, bad).ShouldBeFalse();
+            GreaterThan(bad, ugly).ShouldBeFalse();
+            GreaterThan(ugly, good).ShouldBeTrue();
+            GreaterThan(ugly, bad).ShouldBeTrue();
+            GreaterThan(ugly, ugly).ShouldBeFalse();
+        }
+
+        [TestMethod]
+        public void GreaterThanOrEqual_AllValues_ReturnsCorrectly()
+        {
+            var opGreaterThanOrEqualMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .SingleOrDefault(f => f.Name == "op_GreaterThanOrEqual");
+
+            opGreaterThanOrEqualMethod.ShouldNotBeNull();
+            
+            var good = EnumValues.Single(value => value.ToString() == "Good");
+            var bad = EnumValues.Single(value => value.ToString() == "Bad");
+            var ugly = EnumValues.Single(value => value.ToString() == "Ugly");
+
+            bool GreaterThan(object a, object b) => (bool) opGreaterThanOrEqualMethod.Invoke(null, new[] {a, b});
+
+            GreaterThan(good, good).ShouldBeTrue();
+            GreaterThan(good, bad).ShouldBeFalse();
+            GreaterThan(good, ugly).ShouldBeFalse();
+            GreaterThan(bad, good).ShouldBeTrue();
+            GreaterThan(bad, bad).ShouldBeTrue();
+            GreaterThan(bad, ugly).ShouldBeFalse();
+            GreaterThan(ugly, good).ShouldBeTrue();
+            GreaterThan(ugly, bad).ShouldBeTrue();
+            GreaterThan(ugly, ugly).ShouldBeTrue();
+        }
+
     }
 
 }

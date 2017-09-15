@@ -189,6 +189,46 @@ namespace StronglyTypedEnumConverter
 
         }
 
+        public override string LessThan()
+        {
+            var result = new StringBuilder();
+
+            result.Append($"{Indent(1)}public static bool operator <({TypeName} lhs, {TypeName} rhs)");
+            result.AppendLine(ExpressionBody("lhs.CompareTo(rhs) < 0"));
+
+            return result.ToString();
+        }
+
+        public override string LessThanOrEqual()
+        {
+            var result = new StringBuilder();
+
+            result.Append($"{Indent(1)}public static bool operator <=({TypeName} lhs, {TypeName} rhs)");
+            result.AppendLine(ExpressionBody("lhs.CompareTo(rhs) <= 0"));
+
+            return result.ToString();
+        }
+
+        public override string GreaterThan()
+        {
+            var result = new StringBuilder();
+
+            result.Append($"{Indent(1)}public static bool operator >({TypeName} lhs, {TypeName} rhs)");
+            result.AppendLine(ExpressionBody("lhs.CompareTo(rhs) > 0"));
+
+            return result.ToString();
+        }
+
+        public override string GreaterThanOrEqual()
+        {
+            var result = new StringBuilder();
+
+            result.Append($"{Indent(1)}public static bool operator >=({TypeName} lhs, {TypeName} rhs)");
+            result.AppendLine(ExpressionBody("lhs.CompareTo(rhs) >= 0"));
+
+            return result.ToString();
+        }
+
         public override string EndClassDefinition()
         {
             return "}";

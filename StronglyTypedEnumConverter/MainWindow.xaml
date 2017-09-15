@@ -16,7 +16,6 @@
                  TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True"
                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
                  FontFamily="Courier New" 
-                 GotFocus="txtInput_OnGotFocus"
                  Grid.Row="0"
         />
 
@@ -84,28 +83,15 @@
                 </CheckBox>
             </Grid>
         </Grid>
-        <Grid x:Name="ConvertButton" Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Button x:Name="btnConvert" 
-                    Grid.Row="0" Grid.Column="0" 
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Margin="10,10,10,10"
-                    Padding="10,5,10,5"
-                    Content="Convert"
-                    Click="btnConvert_OnClick"
-                />
-            <Button Content="Paste, Convert &amp; Copy" 
-                    Grid.Row="0" Grid.Column="1" 
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"       
-                    Margin="10,10,10,10"
-                    Padding="10,5,10,5"
-                    Click="btnConvertClipboard_Click"/>
-        </Grid>
+        <Button x:Name="btnConvert" 
+                Grid.Row="2"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Margin="10,10,10,10"
+                Padding="10,5,10,5"
+                Content="Convert"
+                Click="btnConvert_OnClick"
+            />
 
         <TextBox Grid.Row="3" x:Name="txtOutput" 
                  TextWrapping="NoWrap" AcceptsReturn="True" AcceptsTab="True" 

@@ -36,12 +36,6 @@ namespace StronglyTypedEnumConverter
             value.AppendLine("}");
             return value.ToString();
         }
-
-        private void txtInput_OnGotFocus(object sender, RoutedEventArgs e)
-        {
-            if (txtInput.Text == DefaultInput())
-                txtInput.Text = string.Empty;
-        }
         
 
         private void btnConvert_OnClick(object sender, RoutedEventArgs e)
@@ -49,7 +43,7 @@ namespace StronglyTypedEnumConverter
             Convert();
         }
 
-        private bool Convert()
+        private void Convert()
         {
             var converter = new Converter();
             try
@@ -59,17 +53,7 @@ namespace StronglyTypedEnumConverter
             catch (Exception ex)
             {
                 txtOutput.Text = ex.ToString();
-                return false;
             }
-
-            return true;
-        }
-
-        private void btnConvertClipboard_Click(object sender, RoutedEventArgs e)
-        {
-            txtInput.Text = Clipboard.GetText();
-            if (Convert())
-                Clipboard.SetText(txtOutput.Text);
         }
 
 

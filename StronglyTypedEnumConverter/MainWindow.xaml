@@ -20,13 +20,13 @@
                  Grid.Row="0"
         />
 
-        <Grid Grid.Row="1">
+        <Grid x:Name="Options" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0">
+            <Grid x:Name="AdditionPriority" Grid.Column="0">
                 <Grid.Resources>
                     <local:EnumBooleanConverter x:Key="enumBooleanConverter" />
                 </Grid.Resources>
@@ -38,42 +38,53 @@
                              Grid.Row="0" 
                              HorizontalAlignment="Left"
                              VerticalAlignment="Center"
-                             Margin="10,10,10,10"
+                             Margin="5"
                              Content="Optimize for member addition" 
                              IsChecked="{Binding Path=AdditionPriority, Converter={StaticResource enumBooleanConverter}, ConverterParameter={x:Static stronglyTypedEnumConverter:AdditionPriority.Members}}"
                              />
                 <RadioButton x:Name="PropertyAddition" 
                              Grid.Row="1" 
                              HorizontalAlignment="Left"
-                             Margin="10,10,10,10"
+                             Margin="5"
                              VerticalAlignment="Center"
                              Content="Optimize for property addition"
                              IsChecked="{Binding Path=AdditionPriority, Converter={StaticResource enumBooleanConverter}, ConverterParameter={x:Static stronglyTypedEnumConverter:AdditionPriority.Properties}}"
                              />
             </Grid>
-
-            <Grid Grid.Column="1" Margin="50,0,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Label x:Name="lblLanguageVersion" 
+            <Grid x:Name="RightOptions" Grid.Column="1" Margin="50,0,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid x:Name="LanguageVersion"  
+                      Margin="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label x:Name="lblLanguageVersion" 
                        Grid.Column="0"
                        Content="Language Version:" 
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"
                        />
-                <ComboBox x:Name="cboLanguageVersion" 
+                    <ComboBox x:Name="cboLanguageVersion" 
                           Grid.Column="1"
                           HorizontalAlignment="Left"
                           VerticalAlignment="Center"
                           ItemsSource="{Binding LanguageVersions}"
                           SelectedItem="{Binding CurrentLanguageVersion, Mode=TwoWay}"
                     />
+                </Grid>
+                <CheckBox x:Name="chkImplementCompare" Grid.Row="1"
+                          FlowDirection="LeftToRight"
+                          Margin="5"
+                          IsChecked="{Binding ImplementComparable}">
+                    <TextBlock FlowDirection="RightToLeft" Text="Implement IComparable"></TextBlock>
+                </CheckBox>
             </Grid>
-
         </Grid>
-        <Grid Row="2">
+        <Grid x:Name="ConvertButton" Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>

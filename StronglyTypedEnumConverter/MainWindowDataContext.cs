@@ -9,6 +9,7 @@ namespace StronglyTypedEnumConverter
         {
             AdditionPriority = AdditionPriority.Members;
             CurrentLanguageVersion = LanguageVersion.Max;
+            ImplementComparable = false;
         }
 
         public List<LanguageVersion> LanguageVersions => 
@@ -24,12 +25,22 @@ namespace StronglyTypedEnumConverter
             set => SetProperty(ref _currentLanguageVersion, value);
         }
 
+
         public AdditionPriority AdditionPriority { get; set; }
+
+        private bool _implementComparable;
+
+        public bool ImplementComparable
+        {
+            get => _implementComparable;
+            set => SetProperty(ref _implementComparable, value);
+        }
 
         public GeneratorOptions GeneratorOptions => new GeneratorOptions
         {
             AdditionPriority = AdditionPriority,
-            LanguageVersion = CurrentLanguageVersion
+            LanguageVersion = CurrentLanguageVersion,
+            ImplementComparable = ImplementComparable,
         };
     }
 }

@@ -33,13 +33,15 @@ namespace StronglyTypedEnumConverter
             result.Append($"{Indent(1)}private {TypeName}(string name");
             if (Options.DbValue)
                 result.Append(", string dbValue");
-            result.Append($", {UnderlyingTypeName} value");
+            if (Options.UnderlyingValue)
+                result.Append($", {UnderlyingTypeName} value");
             result.AppendLine(")");
             result.AppendLine($"{Indent(1)}{{");
             result.AppendLine($"{Indent(2)}_name = name;");
             if (Options.DbValue)
                 result.AppendLine($"{Indent(2)}_dbValue = dbValue;");
-            result.AppendLine($"{Indent(2)}_value = value;");
+            if (Options.UnderlyingValue)
+                result.AppendLine($"{Indent(2)}_value = value;");
             result.AppendLine($"{Indent(1)}}}");
 
             return result.ToString();
@@ -57,7 +59,8 @@ namespace StronglyTypedEnumConverter
                 result.Append($"{NameOf(member.Name)}");
                 if (Options.DbValue)
                     result.Append($", \"{DbValue(member.Name)}\"");
-                result.Append($", {memberValue}");
+                if (Options.UnderlyingValue)
+                    result.Append($", {memberValue}");
                 result.AppendLine(");");
             }
 

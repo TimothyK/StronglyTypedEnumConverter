@@ -10,6 +10,7 @@ namespace StronglyTypedEnumConverter
         public LanguageVersion LanguageVersion { get; set; } = LanguageVersion.Max;
 
         public bool DbValue { get; set; }
+        public bool UnderlyingValue { get; set; } = true;
 
         public bool ImplementComparable { get; set; }
 

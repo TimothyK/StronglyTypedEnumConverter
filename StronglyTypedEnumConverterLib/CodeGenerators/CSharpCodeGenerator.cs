@@ -194,7 +194,10 @@ namespace StronglyTypedEnumConverter
             result.AppendLine($"{Indent(1)}{{");
             result.AppendLine($"{Indent(2)}var results = new[]");
             result.AppendLine($"{Indent(2)}{{");
-            result.AppendLine($"{Indent(3)}(({UnderlyingTypeName}) this).CompareTo(({UnderlyingTypeName}) other)");
+            if (Options.UnderlyingValue)
+                result.AppendLine($"{Indent(3)}(({UnderlyingTypeName}) this).CompareTo(({UnderlyingTypeName}) other)");
+            else
+                result.AppendLine($"{Indent(3)}ToString().CompareTo(other.ToString())");
             result.AppendLine($"{Indent(2)}}};");
             result.AppendLine($"{Indent(2)}return results");
             result.AppendLine($"{Indent(3)}.SkipWhile(diff => diff == 0)");

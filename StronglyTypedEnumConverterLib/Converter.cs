@@ -71,10 +71,14 @@ namespace StronglyTypedEnumConverter
                 result.AppendLine(gen.RegionEnd());
             }
 
-            result.AppendLine(gen.RegionStart("Cast to/from Underlying Type"));
-            result.AppendLine(gen.CastToUnderlyingOperator());
-            result.AppendLine(gen.CastFromUnderlyingOperator());
-            result.AppendLine(gen.RegionEnd());
+            if (options.UnderlyingValue)
+            {
+                result.AppendLine(gen.RegionStart("Cast to/from Underlying Type"));
+                result.AppendLine(gen.CastToUnderlyingOperator());
+                result.AppendLine(gen.CastFromUnderlyingOperator());
+                result.AppendLine(gen.RegionEnd());
+                
+            }
 
             if (options.ImplementComparable)
             {

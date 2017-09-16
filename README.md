@@ -1,7 +1,7 @@
 StronglyTypedEnumConverter
 ==========================
 
-Converts a basic C# or VB enum to a strong typed enum class.  
+Converts a basic C# enum to a strong typed enum class.  
 
 A strongly typed enum class offers:
 * Invalid integers cannot be assigned

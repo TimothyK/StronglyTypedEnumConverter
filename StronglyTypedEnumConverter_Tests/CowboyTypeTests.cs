@@ -8,6 +8,8 @@ namespace StronglyTypedEnumConverter
     [TestClass]
     public class CowboyTypeTests
     {
+        #region ToString
+
         [TestMethod]
         public void CowboyType_FromInvalidString_ThrowArgRange()
         {
@@ -41,6 +43,69 @@ namespace StronglyTypedEnumConverter
         }
 
         [TestMethod]
+        public void CowboyType_StringValuesRoundTrip_ReturnsOriginalValue()
+        {
+            foreach (var type in CowboyType.All())
+                type.ShouldBeSameAs(CowboyType.FromString(type.ToString()), type + " did not round trip successfully");
+        }
+
+        #endregion
+
+        #region DbValue
+
+        [TestMethod]
+        public void CowboyType_FromInvalidDbValue_ThrowArgRange()
+        {
+            try
+            {
+                CowboyType.FromDbValue("Good");
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return;
+            }
+
+            Assert.Fail("Expected exception did not occur");
+        }
+
+        [TestMethod]
+        public void CowboyType_FromNullDbValue_ThrowArgNull()
+        {
+            try
+            {
+                CowboyType.FromDbValue(null);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return;
+            }
+
+            Assert.Fail("Expected exception did not occur");
+        }
+
+        [TestMethod]
+        public void CowboyType_ToDbValue_AllValuesMap()
+        {
+            CowboyType.Good.ToDbValue().ShouldBe("😇");
+            CowboyType.Bad.ToDbValue().ShouldBe("👿");
+            CowboyType.Ugly.ToDbValue().ShouldBe("👹");
+        }
+
+
+        [TestMethod]
+        public void CowboyType_DbValuesRoundTrip_ReturnsOriginalValue()
+        {
+            foreach (var type in CowboyType.All())
+                type.ShouldBeSameAs(CowboyType.FromDbValue(type.ToDbValue()), type + " did not round trip successfully");
+        }
+        
+        #endregion
+
+        #region All
+
+        [TestMethod]
         public void CowboyType_All_ReturnsAllThreeValues()
         {
             var types = CowboyType.All().ToArray();
@@ -50,12 +115,9 @@ namespace StronglyTypedEnumConverter
             types.ShouldContain(CowboyType.Ugly);
         }
 
-        [TestMethod]
-        public void CowboyType_StringValuesRoundTrip_ReturnsOriginalValue()
-        {
-            foreach (var type in CowboyType.All())
-                type.ShouldBeSameAs(CowboyType.FromString(type.ToString()), type + " did not round trip successfully");
-        }
+        #endregion
+
+        #region Underlying Value
 
         [TestMethod]
         public void CowboyType_CastToInt_ReturnsExpected()
@@ -89,6 +151,10 @@ namespace StronglyTypedEnumConverter
             Assert.Fail("Expected exception did not occur");
         }
 
+        #endregion
+
+        #region Comparer
+
         [TestMethod]
         public void CowboyType_Sort_ValuesAreSorted()
         {
@@ -116,6 +182,8 @@ namespace StronglyTypedEnumConverter
         [TestMethod] public void CowboyType_GoodLessThanOrEqualGood_True() => (CowboyType.Good <= CowboyType.Good).ShouldBeTrue();
         [TestMethod] public void CowboyType_GoodGreaterThanGood_False() => (CowboyType.Good > CowboyType.Good).ShouldBeFalse();
         [TestMethod] public void CowboyType_GoodGreaterThanOrEqualThanGood_True() => (CowboyType.Good >= CowboyType.Good).ShouldBeTrue();
+
+        #endregion
 #pragma warning restore CS1718 // Comparison made to same variable
         // ReSharper restore EqualExpressionComparison
 

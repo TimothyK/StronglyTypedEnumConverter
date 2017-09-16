@@ -6,17 +6,18 @@ using System.Reflection;
 class CowboyType : IComparable<CowboyType>
 {
 
-    private CowboyType(string name, int value)
+    private CowboyType(string name, int value, string dbValue)
     {
         _name = name;
         _value = value;
+        _dbValue = dbValue;
     }
 
     #region Members
 
-    public static readonly CowboyType Good = new CowboyType(nameof(Good), 0);
-    public static readonly CowboyType Bad = new CowboyType(nameof(Bad), 1);
-    public static readonly CowboyType Ugly = new CowboyType(nameof(Ugly), 2);
+    public static readonly CowboyType Good = new CowboyType(nameof(Good), 0, "😇");
+    public static readonly CowboyType Bad = new CowboyType(nameof(Bad), 1, "👿");
+    public static readonly CowboyType Ugly = new CowboyType(nameof(Ugly), 2, "👹");
 
     #endregion
 
@@ -56,6 +57,23 @@ class CowboyType : IComparable<CowboyType>
 
     #endregion
 
+    #region DbValue
+
+    private readonly string _dbValue;
+
+    public string ToDbValue() => _dbValue;
+
+    public static CowboyType FromDbValue(string value)
+    {
+        if (value == null) throw new ArgumentNullException(nameof(value));
+
+        var result = All().FirstOrDefault(x => x.ToDbValue() == value);
+        if (result != null) return result;
+
+        throw new ArgumentOutOfRangeException(nameof(value), value, "Invalid CowboyType");
+    }
+
+    #endregion
 
     #region Cast to/from Underlying Type
 

@@ -14,6 +14,9 @@ namespace StronglyTypedEnumConverter
 
         protected static void ClassInit(GeneratorOptions options)
         {
+            options.DbValue = true;
+            options.ImplementComparable = true;
+
             _type = CompiledStrongTypeFromEnumSourceCode(options);
             EnumMembers = _type.GetEnumMembers();
             EnumValues = _type.GetEnumMemberValues();
@@ -161,6 +164,51 @@ namespace StronglyTypedEnumConverter
             foreach (var kvp in map)
                 kvp.Key.ShouldBeSameAs(kvp.Value);
         }
+
+        [TestMethod]
+        public void ToDbValue_MethodExists()
+        {
+            var hasToDbValueMethod = _type.GetMethods(BindingFlags.Instance | BindingFlags.Public)
+                .Any(f => f.Name == "ToDbValue");
+
+            hasToDbValueMethod.ShouldBeTrue();
+        }
+
+        [TestMethod]
+        public void ToDbValue_Values()
+        {
+            var toDbValueMethod = _type.GetMethods(BindingFlags.Instance | BindingFlags.Public)
+                .Single(f => f.Name == "ToDbValue");
+
+            var good = EnumValues.Single(value => value.ToString() == "Good");
+            var bad = EnumValues.Single(value => value.ToString() == "Bad");
+            var ugly = EnumValues.Single(value => value.ToString() == "Ugly");
+
+            string ToDbValue(object member) => (string) toDbValueMethod.Invoke(member, new object[] {});
+
+            ToDbValue(good).ShouldBe("Good");
+            ToDbValue(bad).ShouldBe("Bad");
+            ToDbValue(ugly).ShouldBe("Ugly");
+        }
+
+        [TestMethod]
+        public void FromDbValue_Values()
+        {
+            var fromDbValueMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .Single(f => f.Name == "FromDbValue");
+            fromDbValueMethod.ReturnType.ShouldBe(_type);
+
+            object FromDbValue(string dbValue) => fromDbValueMethod.Invoke(null, new object[] {dbValue});
+
+            var good = EnumValues.Single(value => value.ToString() == "Good");
+            var bad = EnumValues.Single(value => value.ToString() == "Bad");
+            var ugly = EnumValues.Single(value => value.ToString() == "Ugly");
+
+            FromDbValue("Good").ShouldBe(good);
+            FromDbValue("Bad").ShouldBe(bad);
+            FromDbValue("Ugly").ShouldBe(ugly);
+        }
+
 
         [TestMethod]
         public void FromString_NullInput_ThrowsArgNullException()

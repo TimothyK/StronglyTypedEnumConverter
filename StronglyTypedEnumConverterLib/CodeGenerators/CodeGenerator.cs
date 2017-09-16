@@ -34,6 +34,8 @@ namespace StronglyTypedEnumConverter
         public abstract string AllMethod();
         public abstract string ToStringMethod();
         public abstract string FromStringMethod();
+        public abstract string ToDbValueMethod();
+        public abstract string FromDbValueMethod();
         public abstract string CastToUnderlyingOperator();
         public abstract string CastFromUnderlyingOperator();
         public abstract string CompareTo();

@@ -7,11 +7,11 @@ namespace StronglyTypedEnumConverter
 {
     internal abstract class CSharpCodeGenerator : CodeGenerator
     {
-        private readonly GeneratorOptions _options;
+        protected readonly GeneratorOptions Options;
 
         protected CSharpCodeGenerator(Type enumType, GeneratorOptions options) : base(enumType)
         {
-            _options = options;
+            Options = options;
         }
 
         protected static string Indent(int count)
@@ -21,7 +21,7 @@ namespace StronglyTypedEnumConverter
 
         protected string NameOf(string value)
         {
-            if (_options.LanguageVersion >= LanguageVersion.CSharp6)
+            if (Options.LanguageVersion >= LanguageVersion.CSharp6)
                 return $"nameof({value})";
 
             return $"\"{value}\"";
@@ -29,7 +29,7 @@ namespace StronglyTypedEnumConverter
 
         protected string ExpressionBody(string returnValue)
         {
-            if (_options.LanguageVersion >= LanguageVersion.CSharp6)
+            if (Options.LanguageVersion >= LanguageVersion.CSharp6)
                 return $" => {returnValue};";
 
             var result = new StringBuilder();
@@ -70,7 +70,7 @@ namespace StronglyTypedEnumConverter
             var result = new StringBuilder();
 
             var superClasses = new List<string>();
-            if (_options.ImplementComparable)
+            if (Options.ImplementComparable)
                 superClasses.Add($"IComparable<{TypeName}>");
 
             result.Append($"internal class {TypeName}");
@@ -115,6 +115,22 @@ namespace StronglyTypedEnumConverter
             result.AppendLine($"{Indent(2)}if (value == null) throw new ArgumentNullException({NameOf("value")});");
             result.AppendLine();
             result.AppendLine($"{Indent(2)}var result = All().FirstOrDefault(x => x.ToString() == value);");
+            result.AppendLine($"{Indent(2)}if (result != null) return result;");
+            result.AppendLine();
+            result.AppendLine($"{Indent(2)}throw new ArgumentOutOfRangeException({NameOf("value")}, value, \"Invalid {TypeName}\");");
+            result.AppendLine($"{Indent(1)}}}");
+
+            return result.ToString();
+        }
+        public override string FromDbValueMethod()
+        {
+            var result = new StringBuilder();
+
+            result.AppendLine($"{Indent(1)}public static {TypeName} FromDbValue(string value)");
+            result.AppendLine($"{Indent(1)}{{");
+            result.AppendLine($"{Indent(2)}if (value == null) throw new ArgumentNullException({NameOf("value")});");
+            result.AppendLine();
+            result.AppendLine($"{Indent(2)}var result = All().FirstOrDefault(x => x.ToDbValue() == value);");
             result.AppendLine($"{Indent(2)}if (result != null) return result;");
             result.AppendLine();
             result.AppendLine($"{Indent(2)}throw new ArgumentOutOfRangeException({NameOf("value")}, value, \"Invalid {TypeName}\");");

@@ -68,6 +68,27 @@ namespace StronglyTypedEnumConverter
             return result.ToString();
         }
 
+        public override string ToDbValueMethod()
+        {
+            var result = new StringBuilder();
+
+            result
+                .AppendLine($"{Indent(1)}private static readonly Dictionary<{TypeName}, string> DbValueMap = new Dictionary<{TypeName}, string>");
+            result.AppendLine($"{Indent(1)}{{");
+            var dbValueMappings = MemberNames
+                .Select(memberName => $"{{{memberName}, {NameOf(memberName)}}}")
+                .ToArray();
+            result.Append(Indent(2));
+            result.AppendLine(string.Join($",\r\n{Indent(2)}", dbValueMappings));
+            result.AppendLine($"{Indent(1)}}};");
+            result.AppendLine();
+
+            result.Append($"{Indent(1)}public string ToDbValue()");
+            result.AppendLine(ExpressionBody("DbValueMap[this]"));
+
+            return result.ToString();
+        }
+
         public override string CastToUnderlyingOperator()
         {
             var result = new StringBuilder();

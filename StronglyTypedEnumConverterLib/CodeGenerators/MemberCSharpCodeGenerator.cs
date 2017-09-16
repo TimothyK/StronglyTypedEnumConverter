@@ -30,9 +30,15 @@ namespace StronglyTypedEnumConverter
         {
             var result = new StringBuilder();
 
-            result.AppendLine($"{Indent(1)}private {TypeName}(string name, {UnderlyingTypeName} value)");
+            result.Append($"{Indent(1)}private {TypeName}(string name");
+            if (Options.DbValue)
+                result.Append(", string dbValue");
+            result.Append($", {UnderlyingTypeName} value");
+            result.Append(")");
             result.AppendLine($"{Indent(1)}{{");
             result.AppendLine($"{Indent(2)}_name = name;");
+            if (Options.DbValue)
+                result.AppendLine($"{Indent(2)}_dbValue = dbValue;");
             result.AppendLine($"{Indent(2)}_value = value;");
             result.AppendLine($"{Indent(1)}}}");
 
@@ -47,7 +53,12 @@ namespace StronglyTypedEnumConverter
             {
                 var memberValue = Convert.ChangeType(member.GetValue(null), UnderlyingType);
                 result.Append($"{Indent(1)}public static readonly {TypeName} {member.Name}");
-                result.AppendLine($" = new {TypeName}({NameOf(member.Name)}, {memberValue});");
+                result.Append($" = new {TypeName}(");
+                result.Append($"{NameOf(member.Name)}");
+                if (Options.DbValue)
+                    result.Append($", \"{member.Name}\"");
+                result.Append($", {memberValue}");
+                result.AppendLine(");");
             }
 
             return result.ToString();
@@ -61,6 +72,17 @@ namespace StronglyTypedEnumConverter
 
             result.Append($"{Indent(1)}public override string ToString()");
             result.AppendLine(ExpressionBody("_name"));
+
+            return result.ToString();
+        }
+        public override string ToDbValueMethod()
+        {
+            var result = new StringBuilder();
+
+            result.AppendLine($"{Indent(1)}private readonly string _dbValue;");
+
+            result.Append($"{Indent(1)}public string ToDbValue()");
+            result.AppendLine(ExpressionBody("_dbValue"));
 
             return result.ToString();
         }

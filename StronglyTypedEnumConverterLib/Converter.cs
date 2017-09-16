@@ -63,6 +63,14 @@ namespace StronglyTypedEnumConverter
             result.AppendLine(gen.FromStringMethod());
             result.AppendLine(gen.RegionEnd());
 
+            if (options.DbValue)
+            {
+                result.AppendLine(gen.RegionStart("DbValue"));
+                result.AppendLine(gen.ToDbValueMethod());
+                result.AppendLine(gen.FromDbValueMethod());
+                result.AppendLine(gen.RegionEnd());
+            }
+
             result.AppendLine(gen.RegionStart("Cast to/from Underlying Type"));
             result.AppendLine(gen.CastToUnderlyingOperator());
             result.AppendLine(gen.CastFromUnderlyingOperator());

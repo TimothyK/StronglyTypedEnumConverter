@@ -23,6 +23,15 @@ namespace StronglyTypedEnumConverter
             get { return Members.Select(m => m.Name); }
         }
 
+        protected string DbValue(string memberName)
+        {
+            var firstLetter = memberName.Substring(0, 1);
+            return MemberNames.Count(name => name.StartsWith(firstLetter)) == 1 
+                ? firstLetter 
+                : memberName;
+
+        }
+
         protected Type UnderlyingType => _enumType.GetEnumUnderlyingType();
 
         public abstract string UsingStatement(string nameSpace);

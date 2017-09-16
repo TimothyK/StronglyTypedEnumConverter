@@ -186,9 +186,9 @@ namespace StronglyTypedEnumConverter
 
             string ToDbValue(object member) => (string) toDbValueMethod.Invoke(member, new object[] {});
 
-            ToDbValue(good).ShouldBe("Good");
-            ToDbValue(bad).ShouldBe("Bad");
-            ToDbValue(ugly).ShouldBe("Ugly");
+            ToDbValue(good).ShouldBe("G");
+            ToDbValue(bad).ShouldBe("B");
+            ToDbValue(ugly).ShouldBe("U");
         }
 
         [TestMethod]
@@ -204,9 +204,9 @@ namespace StronglyTypedEnumConverter
             var bad = EnumValues.Single(value => value.ToString() == "Bad");
             var ugly = EnumValues.Single(value => value.ToString() == "Ugly");
 
-            FromDbValue("Good").ShouldBe(good);
-            FromDbValue("Bad").ShouldBe(bad);
-            FromDbValue("Ugly").ShouldBe(ugly);
+            FromDbValue("G").ShouldBe(good);
+            FromDbValue("B").ShouldBe(bad);
+            FromDbValue("U").ShouldBe(ugly);
         }
 
 

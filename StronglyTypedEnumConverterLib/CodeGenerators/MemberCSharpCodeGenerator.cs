@@ -56,7 +56,7 @@ namespace StronglyTypedEnumConverter
                 result.Append($" = new {TypeName}(");
                 result.Append($"{NameOf(member.Name)}");
                 if (Options.DbValue)
-                    result.Append($", \"{member.Name}\"");
+                    result.Append($", \"{DbValue(member.Name)}\"");
                 result.Append($", {memberValue}");
                 result.AppendLine(");");
             }

@@ -34,7 +34,7 @@ namespace StronglyTypedEnumConverter
             if (Options.DbValue)
                 result.Append(", string dbValue");
             result.Append($", {UnderlyingTypeName} value");
-            result.Append(")");
+            result.AppendLine(")");
             result.AppendLine($"{Indent(1)}{{");
             result.AppendLine($"{Indent(2)}_name = name;");
             if (Options.DbValue)

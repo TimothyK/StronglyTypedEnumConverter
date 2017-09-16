@@ -54,6 +54,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid x:Name="LanguageVersion"  
                       Margin="5">
@@ -75,7 +76,13 @@
                           SelectedItem="{Binding CurrentLanguageVersion, Mode=TwoWay}"
                     />
                 </Grid>
-                <CheckBox x:Name="chkImplementCompare" Grid.Row="1"
+                <CheckBox x:Name="chkDbValue" Grid.Row="1"
+                          FlowDirection="LeftToRight"
+                          Margin="5"
+                          IsChecked="{Binding DbValue}">
+                    <TextBlock FlowDirection="RightToLeft" Text="Database Value property"></TextBlock>
+                </CheckBox>
+                <CheckBox x:Name="chkImplementCompare" Grid.Row="2"
                           FlowDirection="LeftToRight"
                           Margin="5"
                           IsChecked="{Binding ImplementComparable}">

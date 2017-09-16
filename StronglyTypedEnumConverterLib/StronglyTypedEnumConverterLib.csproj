@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeGenerators\CSharpBuilder.cs" />
     <Compile Include="CodeGenerators\LanguageVersion.cs" />
     <Compile Include="CodeGenerators\PropertyCSharpCodeGenerator.cs" />
     <Compile Include="CodeGenerators\MemberCSharpCodeGenerator.cs" />

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
 
 namespace StronglyTypedEnumConverter
 {
@@ -27,87 +26,88 @@ namespace StronglyTypedEnumConverter
 
         public override string PrivateConstructor()
         {
-            var result = new StringBuilder();
+            var code = new CSharpBuilder(Options.LanguageVersion);
 
-            result.AppendLine($"{Indent(1)}private {TypeName}() {{ }}");
+            code.Indent(1).AppendLine($"private {TypeName}() {{ }}");
 
-            return result.ToString();
+            return code.ToString();
         }
 
         public override string StaticMembers()
         {
-            var result = new StringBuilder();
+            var code = new CSharpBuilder(Options.LanguageVersion);
 
             foreach (var memberName in MemberNames)
             {
-                result.Append($"{Indent(1)}public static readonly {TypeName} {memberName}");
-                result.AppendLine($" = new {TypeName}();");
+                code.Indent(1).Append($"public static readonly {TypeName} {memberName}");
+                code.AppendLine($" = new {TypeName}();");
             }
 
-            return result.ToString();
+            return code.ToString();
         }
 
         public override string ToStringMethod()
         {
-            var result = new StringBuilder();
+            var code = new CSharpBuilder(Options.LanguageVersion);
 
-            result
-                .AppendLine($"{Indent(1)}private static readonly Dictionary<{TypeName}, string> ToStringMap = new Dictionary<{TypeName}, string>");
-            result.AppendLine($"{Indent(1)}{{");
+            code.Indent(1)
+                .AppendLine($"private static readonly Dictionary<{TypeName}, string> ToStringMap = new Dictionary<{TypeName}, string>");
+            code.Indent(1).AppendLine("{");
             var toStringMappings = MemberNames
                 .Select(memberName => $"{{{memberName}, {NameOf(memberName)}}}")
                 .ToArray();
-            result.Append(Indent(2));
-            result.AppendLine(string.Join($",\r\n{Indent(2)}", toStringMappings));
-            result.AppendLine($"{Indent(1)}}};");
-            result.AppendLine();
+            code.Indent(2);
+            code.AppendLine(string.Join($",\r\n{Indent(2)}", toStringMappings));
+            code.Indent(1).AppendLine("};");
+            code.AppendLine();
 
-            result.Append($"{Indent(1)}public override string ToString()");
-            result.AppendLine(ExpressionBody("ToStringMap[this]"));
+            code.Indent(1).Append("public override string ToString()")
+                .ExpressionBody("ToStringMap[this]");
 
-            return result.ToString();
+            return code.ToString();
         }
 
         public override string ToDbValueMethod()
         {
-            var result = new StringBuilder();
+            var code = new CSharpBuilder(Options.LanguageVersion);
 
-            result
-                .AppendLine($"{Indent(1)}private static readonly Dictionary<{TypeName}, string> DbValueMap = new Dictionary<{TypeName}, string>");
-            result.AppendLine($"{Indent(1)}{{");
+            code.Indent(1)
+                .AppendLine($"private static readonly Dictionary<{TypeName}, string> DbValueMap = new Dictionary<{TypeName}, string>");
+            code.Indent(1).
+                AppendLine("{");
             var dbValueMappings = MemberNames
                 .Select(memberName => $"{{{memberName}, \"{DbValue(memberName)}\"}}")
                 .ToArray();
-            result.Append(Indent(2));
-            result.AppendLine(string.Join($",\r\n{Indent(2)}", dbValueMappings));
-            result.AppendLine($"{Indent(1)}}};");
-            result.AppendLine();
+            code.Indent(2);
+            code.AppendLine(string.Join($",\r\n{Indent(2)}", dbValueMappings));
+            code.Indent(1).AppendLine("};");
+            code.AppendLine();
 
-            result.Append($"{Indent(1)}public string ToDbValue()");
-            result.AppendLine(ExpressionBody("DbValueMap[this]"));
+            code.Indent(1).Append("public string ToDbValue()")
+                .ExpressionBody("DbValueMap[this]");
 
-            return result.ToString();
+            return code.ToString();
         }
 
         public override string CastToUnderlyingOperator()
         {
-            var result = new StringBuilder();
+            var code = new CSharpBuilder(Options.LanguageVersion);
 
-            result.Append($"{Indent(1)}private static readonly Dictionary<{TypeName}, {UnderlyingTypeName}> UnderlyingMap")
+            code.Indent(1).Append($"private static readonly Dictionary<{TypeName}, {UnderlyingTypeName}> UnderlyingMap")
                 .AppendLine($" = new Dictionary<{TypeName}, {UnderlyingTypeName}>");
-            result.AppendLine($"{Indent(1)}{{");
+            code.Indent(1).AppendLine("{");
             var castIntMappings = Members
                 .Select(member => $"{{{member.Name}, {Convert.ChangeType(member.GetValue(null), UnderlyingType)}}}")
                 .ToArray();
-            result.Append(Indent(2));
-            result.AppendLine(string.Join($",\r\n{Indent(2)}", castIntMappings));
-            result.AppendLine($"{Indent(1)}}};");
-            result.AppendLine();
+            code.Indent(2);
+            code.AppendLine(string.Join($",\r\n{Indent(2)}", castIntMappings));
+            code.Indent(1).AppendLine("};");
+            code.AppendLine();
 
-            result.Append($"{Indent(1)}public static explicit operator {UnderlyingTypeName}({TypeName} value)");
-            result.AppendLine(ExpressionBody("UnderlyingMap[value]"));
+            code.Indent(1).Append($"public static explicit operator {UnderlyingTypeName}({TypeName} value)")
+                .ExpressionBody("UnderlyingMap[value]");
 
-            return result.ToString();
+            return code.ToString();
         }
     }
 }

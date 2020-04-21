@@ -136,7 +136,7 @@ namespace StronglyTypedEnumConverter
             code.Indent(2).AppendLine($"var result = All().FirstOrDefault(x => ({UnderlyingTypeName}) x == value);");
             code.Indent(2).AppendLine("if (result != null) return result;");
             code.AppendLine();
-            code.Indent(2).AppendLine($"throw new InvalidCastException(\"The value \" + value + \" is not a valid {TypeName}\");");
+            code.Indent(2).AppendLine($"throw new InvalidCastException($\"The value {{value}} is not a valid {TypeName}\");");
             code.Indent(1).AppendLine("}");
 
             return code.ToString();

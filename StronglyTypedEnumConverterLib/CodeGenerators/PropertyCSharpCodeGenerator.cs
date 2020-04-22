@@ -26,7 +26,7 @@ namespace StronglyTypedEnumConverter
 
         public override string PrivateConstructor()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1).AppendLine($"private {TypeName}() {{ }}");
 
@@ -35,7 +35,7 @@ namespace StronglyTypedEnumConverter
 
         public override string StaticMembers()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             foreach (var memberName in MemberNames)
             {
@@ -48,7 +48,7 @@ namespace StronglyTypedEnumConverter
 
         public override string ToStringMethod()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1)
                 .AppendLine($"private static readonly Dictionary<{TypeName}, string> ToStringMap = new Dictionary<{TypeName}, string>");
@@ -69,7 +69,7 @@ namespace StronglyTypedEnumConverter
 
         public override string ToDbValueMethod()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1)
                 .AppendLine($"private static readonly Dictionary<{TypeName}, string> DbValueMap = new Dictionary<{TypeName}, string>");
@@ -91,7 +91,7 @@ namespace StronglyTypedEnumConverter
 
         public override string CastToUnderlyingOperator()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1).Append($"private static readonly Dictionary<{TypeName}, {UnderlyingTypeName}> UnderlyingMap")
                 .AppendLine($" = new Dictionary<{TypeName}, {UnderlyingTypeName}>");

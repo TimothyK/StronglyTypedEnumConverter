@@ -145,6 +145,7 @@ namespace StronglyTypedEnumConverter
             catch (InvalidCastException ex)
             {
                 Console.WriteLine(ex.ToString());
+                ex.Message.ShouldBe("The value 4 is not a valid CowboyType");
                 return;
             }
 

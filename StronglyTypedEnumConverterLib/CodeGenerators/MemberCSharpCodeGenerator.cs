@@ -27,7 +27,7 @@ namespace StronglyTypedEnumConverter
 
         public override string PrivateConstructor()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1).Append($"private {TypeName}(string name");
             if (Options.DbValue)
@@ -48,7 +48,7 @@ namespace StronglyTypedEnumConverter
 
         public override string StaticMembers()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             foreach (var member in Members)
             {
@@ -68,7 +68,7 @@ namespace StronglyTypedEnumConverter
 
         public override string ToStringMethod()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1).AppendLine("private readonly string _name;");
 
@@ -79,7 +79,7 @@ namespace StronglyTypedEnumConverter
         }
         public override string ToDbValueMethod()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1).AppendLine("private readonly string _dbValue;");
 
@@ -91,7 +91,7 @@ namespace StronglyTypedEnumConverter
 
         public override string CastToUnderlyingOperator()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1).AppendLine($"private readonly {UnderlyingTypeName} _value;");
 

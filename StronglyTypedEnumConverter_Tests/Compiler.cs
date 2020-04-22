@@ -15,7 +15,7 @@ namespace StronglyTypedEnumConverter
         /// <param name="sourceCode"></param>
         /// <param name="version"></param>
         /// <returns></returns>
-        public Assembly Compile(string sourceCode, LanguageVersion version)
+        public Assembly Compile(string sourceCode)
         {
 
             var assemblyName = Path.GetRandomFileName();
@@ -25,7 +25,7 @@ namespace StronglyTypedEnumConverter
                 MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location),
             };
 
-            var options = new CSharpParseOptions(RoslynVersion(version));
+            var options = new CSharpParseOptions(RoslynVersion());
             var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode,options);
             var compilation = CSharpCompilation.Create(
                 assemblyName,
@@ -56,14 +56,9 @@ namespace StronglyTypedEnumConverter
             }
         }
 
-        private static Microsoft.CodeAnalysis.CSharp.LanguageVersion RoslynVersion(LanguageVersion version)
+        private static LanguageVersion RoslynVersion()
         {
-            if (version == LanguageVersion.CSharp5)
-                return Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp5;
-            if (version == LanguageVersion.CSharp6)
-                return Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp6;
-            
-            return Microsoft.CodeAnalysis.CSharp.LanguageVersion.Latest;
+            return LanguageVersion.CSharp6;
         }
     }
 }

@@ -7,12 +7,10 @@ namespace StronglyTypedEnumConverter
     /// </summary>
     internal class CSharpBuilder 
     {
-        private readonly LanguageVersion _version;
         private readonly StringBuilder _builder = new StringBuilder();
 
-        public CSharpBuilder(LanguageVersion version)
+        public CSharpBuilder()
         {
-            _version = version;            
         }
 
         public override string ToString() => _builder.ToString();
@@ -31,28 +29,9 @@ namespace StronglyTypedEnumConverter
 
         public CSharpBuilder Indent(int count) => Append(new string(' ', count * 4));
 
-        public CSharpBuilder NameOf(string value)
-        {
-            if (_version >= LanguageVersion.CSharp6)
-                Append($"nameof({value})");
-            else
-                Append($"\"{value}\"");
+        public CSharpBuilder NameOf(string value) => Append($"nameof({value})");
 
-            return this;
-        }
-
-        public CSharpBuilder ExpressionBody(string returnValue)
-        {
-            if (_version >= LanguageVersion.CSharp6)
-                return Append($" => {returnValue};");
-
-            AppendLine();
-            Indent(1).AppendLine("{");
-            Indent(2).AppendLine($"return {returnValue};");
-            Indent(1).AppendLine("}");
-
-            return this;
-        }
+        public CSharpBuilder ExpressionBody(string returnValue) => Append($" => {returnValue};");
 
 
 

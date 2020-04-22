@@ -23,7 +23,7 @@ namespace StronglyTypedEnumConverter
             Console.WriteLine(stronglyTypedSourceCode);
 
             var compiler = new Compiler();
-            var assembly = compiler.Compile(stronglyTypedSourceCode, options.LanguageVersion);
+            var assembly = compiler.Compile(stronglyTypedSourceCode);
 
             var type = assembly.GetTypes().SingleOrDefault(t => !t.IsAnonymous());
             return type;

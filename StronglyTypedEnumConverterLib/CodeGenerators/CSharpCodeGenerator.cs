@@ -13,16 +13,18 @@ namespace StronglyTypedEnumConverter
             Options = options;
         }
 
+        protected CSharpBuilder CreateCSharpBuilder() => new CSharpBuilder();
+
         protected string Indent(int count)
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
             code.Indent(count);
             return code.ToString();
         }
 
         protected string NameOf(string value)
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
             code.NameOf(value);
             return code.ToString();
         }
@@ -34,7 +36,7 @@ namespace StronglyTypedEnumConverter
 
         public override string RegionStart(string regionName)
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1).AppendLine($"#region {regionName}");
 
@@ -43,7 +45,7 @@ namespace StronglyTypedEnumConverter
 
         public override string RegionEnd()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1).AppendLine("#endregion");
             code.AppendLine();
@@ -53,7 +55,7 @@ namespace StronglyTypedEnumConverter
 
         public override string StartClassDefinition()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             var superClasses = new List<string>();
             if (Options.ImplementComparable)
@@ -71,7 +73,7 @@ namespace StronglyTypedEnumConverter
 
         public override string AllMethod()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1).Append($"public static IEnumerable<{TypeName}> All()")
                 .ExpressionBody($"All<{TypeName}>()");
@@ -94,7 +96,7 @@ namespace StronglyTypedEnumConverter
 
         public override string FromStringMethod()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1).AppendLine($"public static {TypeName} FromString(string value)");
             code.Indent(1).AppendLine("{");
@@ -110,7 +112,7 @@ namespace StronglyTypedEnumConverter
         }
         public override string FromDbValueMethod()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1).AppendLine($"public static {TypeName} FromDbValue(string value)");
             code.Indent(1).AppendLine("{");
@@ -129,7 +131,7 @@ namespace StronglyTypedEnumConverter
 
         public override string CastFromUnderlyingOperator()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1).AppendLine($"public static explicit operator {TypeName}({UnderlyingTypeName} value)");
             code.Indent(1).AppendLine("{");
@@ -174,7 +176,7 @@ namespace StronglyTypedEnumConverter
 
         public override string CompareTo()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1).AppendLine($"public int CompareTo({TypeName} other)");
             code.Indent(1).AppendLine("{");
@@ -196,7 +198,7 @@ namespace StronglyTypedEnumConverter
 
         public override string LessThan()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1).Append($"public static bool operator <({TypeName} lhs, {TypeName} rhs)")
                 .ExpressionBody("lhs.CompareTo(rhs) < 0");
@@ -206,7 +208,7 @@ namespace StronglyTypedEnumConverter
 
         public override string LessThanOrEqual()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1).Append($"public static bool operator <=({TypeName} lhs, {TypeName} rhs)")
                 .ExpressionBody("lhs.CompareTo(rhs) <= 0");
@@ -216,7 +218,7 @@ namespace StronglyTypedEnumConverter
 
         public override string GreaterThan()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1).Append($"public static bool operator >({TypeName} lhs, {TypeName} rhs)")
                 .ExpressionBody("lhs.CompareTo(rhs) > 0");
@@ -226,7 +228,7 @@ namespace StronglyTypedEnumConverter
 
         public override string GreaterThanOrEqual()
         {
-            var code = new CSharpBuilder(Options.LanguageVersion);
+            var code = CreateCSharpBuilder();
 
             code.Indent(1).Append($"public static bool operator >=({TypeName} lhs, {TypeName} rhs)")
                 .ExpressionBody("lhs.CompareTo(rhs) >= 0");

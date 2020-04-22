@@ -1,30 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace StronglyTypedEnumConverter
+﻿namespace StronglyTypedEnumConverter
 {
     class MainWindowDataContext : ObservableObject
     {
         public MainWindowDataContext()
         {
             AdditionPriority = AdditionPriority.Members;
-            CurrentLanguageVersion = LanguageVersion.Max;
             DbValue = true;
             UnderlyingValue = true;
             ImplementComparable = false;
-        }
-
-        public List<LanguageVersion> LanguageVersions => 
-            LanguageVersion.All()
-            .OrderBy(ver => ver.ToString())
-            .ToList();
-
-        private LanguageVersion _currentLanguageVersion;
-
-        public LanguageVersion CurrentLanguageVersion
-        {
-            get => _currentLanguageVersion; 
-            set => SetProperty(ref _currentLanguageVersion, value);
         }
 
 
@@ -57,7 +40,6 @@ namespace StronglyTypedEnumConverter
         public GeneratorOptions GeneratorOptions => new GeneratorOptions
         {
             AdditionPriority = AdditionPriority,
-            LanguageVersion = CurrentLanguageVersion,
             DbValue = DbValue,
             UnderlyingValue = UnderlyingValue,
             ImplementComparable = ImplementComparable,

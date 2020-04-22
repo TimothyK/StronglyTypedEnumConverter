@@ -55,41 +55,20 @@
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
-                <Grid x:Name="LanguageVersion"  
-                      Margin="5">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Label x:Name="lblLanguageVersion" 
-                       Grid.Column="0"
-                       Content="Language Version:" 
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Center"
-                       />
-                    <ComboBox x:Name="cboLanguageVersion" 
-                          Grid.Column="1"
-                          HorizontalAlignment="Left"
-                          VerticalAlignment="Center"
-                          ItemsSource="{Binding LanguageVersions}"
-                          SelectedItem="{Binding CurrentLanguageVersion, Mode=TwoWay}"
-                    />
-                </Grid>
-                <CheckBox x:Name="chkDbValue" Grid.Row="1"
+                <CheckBox x:Name="chkDbValue" Grid.Row="0"
                           FlowDirection="LeftToRight"
                           Margin="5"
                           IsChecked="{Binding DbValue}">
                     <TextBlock FlowDirection="RightToLeft" Text="Database Value property"></TextBlock>
                 </CheckBox>
-                <CheckBox x:Name="chkUnderlyingValue" Grid.Row="2"
+                <CheckBox x:Name="chkUnderlyingValue" Grid.Row="1"
                           FlowDirection="LeftToRight"
                           Margin="5"
                           IsChecked="{Binding UnderlyingValue}">
                     <TextBlock FlowDirection="RightToLeft" Text="Underlying Value casting"></TextBlock>
                 </CheckBox>
-                <CheckBox x:Name="chkImplementCompare" Grid.Row="3"
+                <CheckBox x:Name="chkImplementCompare" Grid.Row="2"
                           FlowDirection="LeftToRight"
                           Margin="5"
                           IsChecked="{Binding ImplementComparable}">

@@ -16,7 +16,7 @@ namespace StronglyTypedEnumConverter
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
-            _type = CompiledStrongTypeFromEnumSourceCode("enum CowboyType : byte {Good,Bad,Ugly};", LanguageVersion.Max);
+            _type = CompiledStrongTypeFromEnumSourceCode("enum CowboyType : byte {Good,Bad,Ugly};");
             EnumMembers = _type.GetEnumMembers();
             EnumValues = _type.GetEnumMemberValues();
         }
@@ -28,7 +28,7 @@ namespace StronglyTypedEnumConverter
         /// <param name="enumSourceCode"></param>
         /// <param name="optionsLanguageVersion"></param>
         /// <returns></returns>
-        private static Type CompiledStrongTypeFromEnumSourceCode(string enumSourceCode, LanguageVersion optionsLanguageVersion)
+        private static Type CompiledStrongTypeFromEnumSourceCode(string enumSourceCode)
         {
             var converter = new Converter();
             var options = new GeneratorOptions();
@@ -36,7 +36,7 @@ namespace StronglyTypedEnumConverter
             Console.WriteLine(stronglyTypedSourceCode);
 
             var compiler = new Compiler();
-            var assembly = compiler.Compile(stronglyTypedSourceCode, optionsLanguageVersion);
+            var assembly = compiler.Compile(stronglyTypedSourceCode);
 
             var type = assembly.GetTypes().SingleOrDefault(t => !t.IsAnonymous());
             return type;

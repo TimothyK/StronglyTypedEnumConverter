@@ -57,12 +57,12 @@ namespace StronglyTypedEnumConverter
         [TestMethod]
         public void ExplicitToByte_HasMethod()
         {
-            var opExplicitMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
-                .Where(f => f.Name == "op_Explicit")
+            var opCastMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .Where(f => f.Name == "op_Implicit")
                 .Where(f => f.ReturnType == typeof(byte))
                 .SingleOrDefault(f => f.GetParameters().Single().ParameterType == _type);
 
-            opExplicitMethod.ShouldNotBeNull();
+            opCastMethod.ShouldNotBeNull();
         }
     }
 }

@@ -95,7 +95,7 @@ namespace StronglyTypedEnumConverter
 
             code.Indent(1).AppendLine($"private readonly {UnderlyingTypeName} _value;");
 
-            code.Indent(1).Append($"public static explicit operator {UnderlyingTypeName}({TypeName} value)")
+            code.Indent(1).Append($"public static implicit operator {UnderlyingTypeName}({TypeName} value)")
                 .ExpressionBody("value._value");
 
             return code.ToString();

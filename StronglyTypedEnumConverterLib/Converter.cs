@@ -46,29 +46,30 @@ namespace StronglyTypedEnumConverter
             result.AppendLine(gen.UsingStatement("System.Reflection"));
             result.AppendLine();
 
+            result.Append(gen.StartNamespace());
             
-            result.AppendLine(gen.StartClassDefinition());
+            result.Append(gen.StartClassDefinition());
             result.AppendLine(gen.PrivateConstructor());
 
             result.AppendLine(gen.RegionStart("Members"));
             result.AppendLine(gen.StaticMembers());
-            result.AppendLine(gen.RegionEnd());
+            result.Append(gen.RegionEnd());
 
             result.AppendLine(gen.RegionStart("All"));
             result.AppendLine(gen.AllMethod());
-            result.AppendLine(gen.RegionEnd());
+            result.Append(gen.RegionEnd());
 
             result.AppendLine(gen.RegionStart("To/From String"));
             result.AppendLine(gen.ToStringMethod());
             result.AppendLine(gen.FromStringMethod());
-            result.AppendLine(gen.RegionEnd());
+            result.Append(gen.RegionEnd());
 
             if (options.DbValue)
             {
                 result.AppendLine(gen.RegionStart("DbValue"));
                 result.AppendLine(gen.ToDbValueMethod());
                 result.AppendLine(gen.FromDbValueMethod());
-                result.AppendLine(gen.RegionEnd());
+                result.Append(gen.RegionEnd());
             }
 
             if (options.UnderlyingValue)
@@ -76,7 +77,7 @@ namespace StronglyTypedEnumConverter
                 result.AppendLine(gen.RegionStart("Cast to/from Underlying Type"));
                 result.AppendLine(gen.CastToUnderlyingOperator());
                 result.AppendLine(gen.CastFromUnderlyingOperator());
-                result.AppendLine(gen.RegionEnd());
+                result.Append(gen.RegionEnd());
                 
             }
 
@@ -88,10 +89,12 @@ namespace StronglyTypedEnumConverter
                 result.AppendLine(gen.LessThanOrEqual());
                 result.AppendLine(gen.GreaterThan());
                 result.AppendLine(gen.GreaterThanOrEqual());
-                result.AppendLine(gen.RegionEnd());
+                result.AppendLine();
+                result.Append(gen.RegionEnd());
             }
 
-            result.AppendLine(gen.EndClassDefinition());
+            result.Append(gen.EndClassDefinition());
+            result.Append(gen.EndNamespace());
 
             return result.ToString();
         }

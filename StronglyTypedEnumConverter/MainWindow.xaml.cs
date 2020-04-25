@@ -29,10 +29,12 @@ namespace StronglyTypedEnumConverter
         {
             var value = new StringBuilder();
             value.AppendLine("//Enter your C# simple enum here");
-            value.AppendLine("enum CowboyType : int {");
-            value.AppendLine("    Good,");
-            value.AppendLine("    Bad,");
-            value.AppendLine("    Ugly");
+            value.AppendLine("namespace Enums {");
+            value.AppendLine("    enum CowboyType : int {");
+            value.AppendLine("        Good,");
+            value.AppendLine("        Bad,");
+            value.AppendLine("        Ugly");
+            value.AppendLine("    }");
             value.AppendLine("}");
             return value.ToString();
         }

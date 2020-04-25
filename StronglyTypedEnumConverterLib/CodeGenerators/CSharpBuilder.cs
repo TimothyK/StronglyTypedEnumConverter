@@ -27,7 +27,7 @@ namespace StronglyTypedEnumConverter
             return this;
         }
 
-        public CSharpBuilder Indent(int count) => Append(new string(' ', count * 4));
+        public CSharpBuilder Indent(int count) => Append(new string(' ', (count + 1) * 4));
 
         public CSharpBuilder NameOf(string value) => Append($"nameof({value})");
 

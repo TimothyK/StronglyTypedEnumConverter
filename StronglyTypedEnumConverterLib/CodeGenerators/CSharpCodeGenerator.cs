@@ -53,6 +53,15 @@ namespace StronglyTypedEnumConverter
             return code.ToString();
         }
 
+        public override string StartNamespace()
+        {
+            var code = CreateCSharpBuilder();
+            code.AppendLine($"namespace {Namespace}");
+            code.AppendLine("{");
+
+            return code.ToString();
+        }
+
         public override string StartClassDefinition()
         {
             var code = CreateCSharpBuilder();
@@ -61,11 +70,11 @@ namespace StronglyTypedEnumConverter
             if (Options.ImplementComparable)
                 superClasses.Add($"IComparable<{TypeName}>");
 
-            code.Append($"internal class {TypeName}");
+            code.Indent(0).Append($"internal class {TypeName}");
             if (superClasses.Any())
                 code.Append(" : ").Append(string.Join(", ", superClasses));
             code.AppendLine();
-            code.AppendLine("{");
+            code.Indent(0).AppendLine("{");
 
             return code.ToString();
         }
@@ -238,7 +247,20 @@ namespace StronglyTypedEnumConverter
 
         public override string EndClassDefinition()
         {
-            return "}";
+            var code = CreateCSharpBuilder();
+
+            code.Indent(0).AppendLine("}");
+
+            return code.ToString();
+        }
+
+        public override string EndNamespace()
+        {
+            var code = CreateCSharpBuilder();
+            
+            code.AppendLine("}");
+
+            return code.ToString();
         }
     }
 }

@@ -14,6 +14,7 @@ namespace StronglyTypedEnumConverter
             _enumType = enumType;
         }
 
+        protected string Namespace => !string.IsNullOrWhiteSpace(_enumType.Namespace) ? _enumType.Namespace : "Project1";
         protected string TypeName => _enumType.Name;
 
         protected IEnumerable<FieldInfo> Members => _enumType.GetFields(BindingFlags.Public | BindingFlags.Static);
@@ -35,6 +36,7 @@ namespace StronglyTypedEnumConverter
         protected Type UnderlyingType => _enumType.GetEnumUnderlyingType();
 
         public abstract string UsingStatement(string nameSpace);
+        public abstract string StartNamespace();
         public abstract string RegionStart(string regionName);
         public abstract string RegionEnd();
         public abstract string StartClassDefinition();
@@ -53,5 +55,6 @@ namespace StronglyTypedEnumConverter
         public abstract string GreaterThan();
         public abstract string GreaterThanOrEqual();
         public abstract string EndClassDefinition();
+        public abstract string EndNamespace();
     }
 }

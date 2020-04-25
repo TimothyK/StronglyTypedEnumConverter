@@ -254,12 +254,12 @@ namespace StronglyTypedEnumConverter
         [TestMethod]
         public void ExplicitToInt_HasMethod()
         {
-            var opExplicitMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
-                .Where(f => f.Name == "op_Explicit")
+            var opCastMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .Where(f => f.Name == "op_Implicit")
                 .Where(f => f.ReturnType == typeof(int))
                 .SingleOrDefault(f => f.GetParameters().Single().ParameterType == _type);
 
-            opExplicitMethod.ShouldNotBeNull();
+            opCastMethod.ShouldNotBeNull();
         }
 
         [TestMethod]
@@ -267,8 +267,8 @@ namespace StronglyTypedEnumConverter
         {
             var fields = EnumMembers.ToArray();
 
-            var opExplicitMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
-                .Where(f => f.Name == "op_Explicit")
+            var opCastMethod = _type.GetMethods(BindingFlags.Static | BindingFlags.Public)
+                .Where(f => f.Name == "op_Implicit")
                 .Where(f => f.ReturnType == typeof(int))
                 .Single(f => f.GetParameters().Single().ParameterType == _type);
 
@@ -283,7 +283,7 @@ namespace StronglyTypedEnumConverter
             {
                 var field = fields.First(f => f.Name == kvp.Key);
                 var enumValue = field.GetValue(null);
-                var actual = opExplicitMethod.Invoke(null, new[] { enumValue });
+                var actual = opCastMethod.Invoke(null, new[] { enumValue });
                 actual.ShouldBe(kvp.Value, "Value of " + kvp.Key + " has incorrect integer mapping");
             }
 

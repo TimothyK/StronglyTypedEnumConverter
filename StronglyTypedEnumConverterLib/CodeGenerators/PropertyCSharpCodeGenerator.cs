@@ -104,7 +104,7 @@ namespace StronglyTypedEnumConverter
             code.Indent(1).AppendLine("};");
             code.AppendLine();
 
-            code.Indent(1).Append($"public static explicit operator {UnderlyingTypeName}({TypeName} value)")
+            code.Indent(1).Append($"public static implicit operator {UnderlyingTypeName}({TypeName} value)")
                 .ExpressionBody("UnderlyingMap[value]");
 
             return code.ToString();

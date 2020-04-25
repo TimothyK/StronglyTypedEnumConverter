@@ -22,7 +22,7 @@ namespace StronglyTypedEnumConverter
             EnumValues = _type.GetEnumMemberValues();
         }
 
-        private const string SourceCode = "enum CowboyType {Good,Bad,Ugly};";
+        private const string SourceCode = "namespace SpaghettiWesterns.Enums {enum CowboyType {Good,Bad,Ugly}}";
 
         /// <summary>
         /// Compiles enum source code to an in-memory strongly typed Type
@@ -57,6 +57,12 @@ namespace StronglyTypedEnumConverter
         public void Class_SameNameAsEnum()
         {
             _type.Name.ShouldBe("CowboyType");
+        }
+
+        [TestMethod]
+        public void Class_NamespaceSet()
+        {
+            _type.Namespace.ShouldBe("SpaghettiWesterns.Enums");
         }
 
         [TestMethod]

@@ -100,5 +100,7 @@ namespace StronglyTypedEnumConverter
 
             return code.ToString();
         }
+
+
     }
 }

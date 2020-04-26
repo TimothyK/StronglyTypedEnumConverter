@@ -41,6 +41,8 @@ namespace StronglyTypedEnumConverter
                 code.Indent(2).AppendLine("_dbValue = dbValue;");
             if (Options.UnderlyingValue)
                 code.Indent(2).AppendLine("_value = value;");
+            code.AppendLine();
+            code.Indent(2).AppendLine("_all.Add(this);");
             code.Indent(1).AppendLine("}");
 
             return code.ToString();

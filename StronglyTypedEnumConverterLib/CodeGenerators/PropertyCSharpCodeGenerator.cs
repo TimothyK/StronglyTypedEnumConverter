@@ -28,7 +28,10 @@ namespace StronglyTypedEnumConverter
         {
             var code = CreateCSharpBuilder();
 
-            code.Indent(1).AppendLine($"private {TypeName}() {{ }}");
+            code.Indent(1).AppendLine($"private {TypeName}()");
+            code.Indent(1).AppendLine("{");
+            code.Indent(2).AppendLine("_all.Add(this);");
+            code.Indent(1).AppendLine("}");
 
             return code.ToString();
         }

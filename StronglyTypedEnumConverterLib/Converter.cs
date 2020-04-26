@@ -43,7 +43,6 @@ namespace StronglyTypedEnumConverter
             result.AppendLine(gen.UsingStatement("System"));
             result.AppendLine(gen.UsingStatement("System.Collections.Generic"));
             result.AppendLine(gen.UsingStatement("System.Linq"));
-            result.AppendLine(gen.UsingStatement("System.Reflection"));
             result.AppendLine();
 
             result.Append(gen.StartNamespace());
@@ -51,12 +50,14 @@ namespace StronglyTypedEnumConverter
             result.Append(gen.StartClassDefinition());
             result.AppendLine(gen.PrivateConstructor());
 
-            result.AppendLine(gen.RegionStart("Members"));
-            result.AppendLine(gen.StaticMembers());
+            result.AppendLine(gen.RegionStart("All"));
+            result.Append(gen.AllField());  //Must be before Members.  Otherwise NullRef in constructor when _all.Add is called.
+            result.AppendLine(gen.AllMethod());
+            result.AppendLine();
             result.Append(gen.RegionEnd());
 
-            result.AppendLine(gen.RegionStart("All"));
-            result.AppendLine(gen.AllMethod());
+            result.AppendLine(gen.RegionStart("Members"));
+            result.AppendLine(gen.StaticMembers());
             result.Append(gen.RegionEnd());
 
             result.AppendLine(gen.RegionStart("To/From String"));

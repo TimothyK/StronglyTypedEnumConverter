@@ -79,24 +79,21 @@ namespace StronglyTypedEnumConverter
             return code.ToString();
         }
 
+        public override string AllField()
+        {
+            var code = CreateCSharpBuilder();
+
+            code.Indent(1).AppendLine($"private static List<{TypeName}> _all = new List<{TypeName}>();");                
+
+            return code.ToString();
+        }
 
         public override string AllMethod()
         {
             var code = CreateCSharpBuilder();
 
             code.Indent(1).Append($"public static IEnumerable<{TypeName}> All()")
-                .ExpressionBody($"All<{TypeName}>()");
-
-            code.AppendLine();
-            code.Indent(1).AppendLine("private static IEnumerable<T> All<T>()");
-            code.Indent(1).AppendLine("{");
-            code.Indent(2).AppendLine("var type = typeof(T);");
-            code.Indent(2).AppendLine("return type.GetFields(BindingFlags.Public | BindingFlags.Static)");
-            code.Indent(3).AppendLine(".Where(field => field.IsInitOnly)");
-            code.Indent(3).AppendLine(".Where(field => field.FieldType == type)");
-            code.Indent(3).AppendLine(".Select(field => field.GetValue(null))");
-            code.Indent(3).AppendLine(".Cast<T>();");
-            code.Indent(1).AppendLine("}");
+                .ExpressionBody($"_all");
 
             return code.ToString();
         }

@@ -53,7 +53,7 @@ class CowboyType
     //* To/From how this value is represented in a database or other external systems
 }
 ```
-Read more: https://timothyk.github.io/blog/2014/StronglyTypedEnum/
+Read more: https://codemonkeyprojectiles.com/blog/2014/StronglyTypedEnum/
 
 The conversion routine is hosted by a simple WPF desktop application.  
 Its also available as a DLL so that if you want you can
